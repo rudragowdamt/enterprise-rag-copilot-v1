@@ -101,13 +101,39 @@ with st.sidebar:
 # =========================================================
 
 st.subheader("Ask the Copilot")
-
-question = st.text_area(
-    "Describe the integration issue",
-    value=(
+example_questions = {
+    "Axway 504 Gateway Timeout": (
         "PaymentService through Axway is returning HTTP 504. "
         "What should I investigate and have we seen this before?"
     ),
+    "Boomi Deployment Failure": (
+        "A Boomi production process started failing immediately "
+        "after deployment. What should support check?"
+    ),
+    "Layer7 Authentication Issue": (
+        "Layer7 suddenly returns 401 for many clients after "
+        "an IdP change. What is a likely cause?"
+    ),
+    "SFTP Host Key Change": (
+        "Our partner SFTP host key changed. Can we bypass "
+        "validation to restore service?"
+    ),
+}
+
+selected_example = st.selectbox(
+    "Try an example",
+    [
+        "Axway 504 Gateway Timeout",
+        "Boomi Deployment Failure",
+        "Layer7 Authentication Issue",
+        "SFTP Host Key Change",
+    ],
+)
+
+default_question = example_questions[selected_example]
+question = st.text_area(
+    "Describe the integration issue",
+    value=default_question,
     height=120,
     max_chars=500,
 )
