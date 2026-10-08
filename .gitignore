@@ -5,3 +5,4 @@ __pycache__/
 .env
 .aws-sam/
 .DS_Store
+data/cache/

@@ -10,7 +10,10 @@ from src.generation import (
     build_prompt,
     generate_answer,
 )
-
+from src.cache import (
+    get_cached_result,
+    save_cached_result,
+)
 
 DEFAULT_EMBEDDING_FILE = Path(
     "data/embeddings/chunk_embeddings.json"
@@ -25,6 +28,14 @@ def ask_rag(
 
     if not question.strip():
         raise ValueError("Question cannot be empty.")
+    
+    cached_result = get_cached_result(
+    question
+    )
+
+    if cached_result is not None:
+        cached_result["cache_hit"] = True
+        return cached_result
 
     records = load_embedding_records(
         embedding_file
@@ -52,9 +63,27 @@ def ask_rag(
     answer = generate_answer(
         prompt
     )
+    clean_sources = []
 
-    return {
+    for source in results:
+        clean_source = {
+            key: value
+            for key, value in source.items()
+            if key != "embedding"
+        }
+        clean_sources.append(
+            clean_source
+        )
+    result = {
         "question": question,
         "answer": answer,
-        "sources": results,
+        "sources": clean_sources,
+        "cache_hit": False,
     }
+
+    save_cached_result(
+        question,
+        result,
+    )
+
+    return result

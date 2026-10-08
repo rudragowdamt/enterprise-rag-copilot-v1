@@ -1,3 +1,5 @@
+import time
+
 import streamlit as st
 
 from src.rag_pipeline import ask_rag
@@ -157,8 +159,15 @@ example_questions = {
 
 if "question" not in st.session_state:
     st.session_state.question = ""
+if "request_count" not in st.session_state:
+    st.session_state.request_count = 0
 
+MAX_REQUESTS = 10
+MAX_QUESTION_LENGTH = 500
+REQUEST_COOLDOWN_SECONDS = 5
 
+if "last_request_time" not in st.session_state:
+    st.session_state.last_request_time = 0.0
 columns = st.columns(4)
 
 for column, (label, example) in zip(
@@ -205,9 +214,35 @@ if st.button(
         st.warning(
             "Please enter an integration support question."
         )
+    elif len(question) > MAX_QUESTION_LENGTH:
+
+        st.warning(
+            "Question is too long. "
+            f"Please keep it under "
+            f"{MAX_QUESTION_LENGTH} characters."
+        )
+    elif (
+        time.time()
+        - st.session_state.last_request_time
+        < REQUEST_COOLDOWN_SECONDS
+    ):
+
+        st.warning(
+            "Please wait a few seconds "
+            "before submitting another request."
+        )    
+    elif st.session_state.request_count >= MAX_REQUESTS:
+
+        st.error(
+            "Demo request limit reached. "
+            "This session allows a maximum of "
+            f"{MAX_REQUESTS} requests."
+        )
 
     else:
 
+        st.session_state.request_count += 1
+        st.session_state.last_request_time = time.time()
         with st.spinner(
             "Searching enterprise knowledge and "
             "generating a grounded response..."
@@ -303,6 +338,16 @@ if st.button(
 # ---------------------------------------------------------
 
 st.divider()
+
+remaining_requests = (
+    MAX_REQUESTS
+    - st.session_state.request_count
+)
+
+st.caption(
+    f"Demo requests remaining: "
+    f"{remaining_requests}/{MAX_REQUESTS}"
+)
 
 st.caption(
     "Enterprise Integration Knowledge & Incident Resolution "
