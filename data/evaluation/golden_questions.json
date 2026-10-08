@@ -1,0 +1,98 @@
+[
+  {
+    "id": "Q01",
+    "question": "PaymentService through Axway is returning 504. What should I investigate and have we seen this before?",
+    "expected_sources": [
+      "runbooks/axway_gateway_504.md",
+      "incidents/INC003_axway_payment_504.md",
+      "architecture/payment_integration_flow.md"
+    ]
+  },
+  {
+    "id": "Q02",
+    "question": "A Boomi production process started failing immediately after deployment. What should support check?",
+    "expected_sources": [
+      "runbooks/boomi_process_failure.md",
+      "incidents/INC001_boomi_prod_failure.md",
+      "procedures/production_deployment.md"
+    ]
+  },
+  {
+    "id": "Q03",
+    "question": "Layer7 suddenly returns 401 for many clients after an IdP change. What is a likely cause?",
+    "expected_sources": [
+      "runbooks/layer7_oauth_401.md",
+      "incidents/INC002_layer7_certificate_expiry.md"
+    ]
+  },
+  {
+    "id": "Q04",
+    "question": "Our partner SFTP host key changed. Can we bypass validation to restore service?",
+    "expected_sources": [
+      "runbooks/sftp_failure.md",
+      "incidents/INC005_sftp_partner_failure.md"
+    ]
+  },
+  {
+    "id": "Q05",
+    "question": "When should an integration outage be declared P1 and what happens next?",
+    "expected_sources": [
+      "policies/p1_escalation.md"
+    ]
+  },
+  {
+    "id": "Q06",
+    "question": "What should be validated after a middleware production deployment?",
+    "expected_sources": [
+      "procedures/production_deployment.md"
+    ]
+  },
+  {
+    "id": "Q07",
+    "question": "What can cause API 504 even when the gateway itself is healthy?",
+    "expected_sources": [
+      "runbooks/axway_gateway_504.md",
+      "incidents/INC003_axway_payment_504.md",
+      "architecture/payment_integration_flow.md"
+    ]
+  },
+  {
+    "id": "Q08",
+    "question": "What are the safe steps for rotating a middleware certificate?",
+    "expected_sources": [
+      "procedures/certificate_rotation.md",
+      "runbooks/certificate_expiry.md"
+    ]
+  },
+  {
+    "id": "Q09",
+    "question": "A Boomi Molecule is partially unavailable. Should all nodes be restarted together?",
+    "expected_sources": [
+      "runbooks/boomi_atom_unavailable.md"
+    ]
+  },
+  {
+    "id": "Q10",
+    "question": "How should we perform a daily health check across our integration estate?",
+    "expected_sources": [
+      "procedures/middleware_health_check.md",
+      "architecture/middleware_platform_overview.md"
+    ]
+  },
+  {
+    "id": "Q11",
+    "question": "Database connection acquisition is timing out in an integration. What should we check?",
+    "expected_sources": [
+      "runbooks/database_pool_exhaustion.md",
+      "incidents/INC004_database_connection.md"
+    ]
+  },
+  {
+    "id": "Q12",
+    "question": "Explain the PaymentService dependency path and how a database issue could appear to clients.",
+    "expected_sources": [
+      "architecture/payment_integration_flow.md",
+      "incidents/INC003_axway_payment_504.md"
+    ]
+  }
+]
