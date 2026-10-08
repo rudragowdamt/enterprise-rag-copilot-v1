@@ -164,6 +164,21 @@ question = st.text_area(
 
 
 # =========================================================
+# REQUEST STATUS
+# =========================================================
+
+remaining_requests = max(
+    MAX_REQUESTS - st.session_state.request_count,
+    0,
+)
+
+st.caption(
+    f"Demo requests remaining: "
+    f"{remaining_requests}/{MAX_REQUESTS}"
+)
+
+
+# =========================================================
 # RAG
 # =========================================================
 
@@ -373,6 +388,16 @@ if st.button(
 # =========================================================
 
 st.divider()
+
+remaining_requests = max(
+    MAX_REQUESTS - st.session_state.request_count,
+    0,
+)
+
+st.caption(
+    f"Demo requests remaining: "
+    f"{remaining_requests}/{MAX_REQUESTS}"
+)
 
 st.caption(
     "Enterprise Integration Knowledge & Incident Resolution "
