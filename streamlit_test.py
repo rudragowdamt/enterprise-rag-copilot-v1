@@ -1,16 +1,16 @@
 import time
 import streamlit as st
 
+from src.rag_pipeline import ask_rag
+
+
+# =========================================================
+# CONFIGURATION
+# =========================================================
+
 MAX_REQUESTS = 10
 REQUEST_COOLDOWN_SECONDS = 5
-
-if "request_count" not in st.session_state:
-    st.session_state.request_count = 0
-
-if "last_request_time" not in st.session_state:
-    st.session_state.last_request_time = 0.0
-
-from src.rag_pipeline import ask_rag
+MAX_QUESTION_LENGTH = 500
 
 
 # =========================================================
@@ -25,7 +25,18 @@ st.set_page_config(
 
 
 # =========================================================
-# SIMPLE PURPLE BRANDING
+# SESSION STATE
+# =========================================================
+
+if "request_count" not in st.session_state:
+    st.session_state.request_count = 0
+
+if "last_request_time" not in st.session_state:
+    st.session_state.last_request_time = 0.0
+
+
+# =========================================================
+# PURPLE BRANDING
 # =========================================================
 
 st.markdown(
@@ -111,6 +122,8 @@ with st.sidebar:
 # =========================================================
 
 st.subheader("Ask the Copilot")
+
+
 example_questions = {
     "Axway 504 Gateway Timeout": (
         "PaymentService through Axway is returning HTTP 504. "
@@ -130,22 +143,23 @@ example_questions = {
     ),
 }
 
+
 selected_example = st.selectbox(
     "Try an example",
-    [
-        "Axway 504 Gateway Timeout",
-        "Boomi Deployment Failure",
-        "Layer7 Authentication Issue",
-        "SFTP Host Key Change",
-    ],
+    list(example_questions.keys()),
 )
 
-default_question = example_questions[selected_example]
+
+default_question = example_questions[
+    selected_example
+]
+
+
 question = st.text_area(
     "Describe the integration issue",
     value=default_question,
     height=120,
-    max_chars=500,
+    max_chars=MAX_QUESTION_LENGTH,
 )
 
 
@@ -159,35 +173,43 @@ if st.button(
     use_container_width=True,
 ):
 
-if not question.strip():
+    # -----------------------------------------------------
+    # VALIDATION
+    # -----------------------------------------------------
 
-    st.warning(
-        "Please enter an integration support question."
-    )
+    if not question.strip():
 
-elif st.session_state.request_count >= MAX_REQUESTS:
+        st.warning(
+            "Please enter an integration support question."
+        )
 
-    st.error(
-        "Demo request limit reached for this session."
-    )
+    elif st.session_state.request_count >= MAX_REQUESTS:
 
-elif (
-    time.time()
-    - st.session_state.last_request_time
-    < REQUEST_COOLDOWN_SECONDS
-):
+        st.error(
+            "Demo request limit reached for this session."
+        )
 
-    st.warning(
-        "Please wait a few seconds before "
-        "submitting another request."
-    )
+    elif (
+        time.time()
+        - st.session_state.last_request_time
+        < REQUEST_COOLDOWN_SECONDS
+    ):
 
-else:
+        st.warning(
+            "Please wait a few seconds before "
+            "submitting another request."
+        )
 
-    st.session_state.request_count += 1
-    st.session_state.last_request_time = time.time()
+    else:
 
-    try:
+        # -------------------------------------------------
+        # VALID REQUEST
+        # -------------------------------------------------
+
+        st.session_state.request_count += 1
+        st.session_state.last_request_time = time.time()
+
+        try:
 
             with st.spinner(
                 "Searching enterprise knowledge and "
@@ -197,6 +219,11 @@ else:
                 result = ask_rag(
                     question.strip()
                 )
+
+
+            # =============================================
+            # SUCCESS
+            # =============================================
 
             st.success(
                 "Analysis completed successfully."
@@ -252,10 +279,19 @@ else:
                 "before generating the response."
             )
 
+
             sources = result.get(
                 "sources",
                 [],
             )
+
+
+            if not sources:
+
+                st.info(
+                    "No retrieval evidence was returned."
+                )
+
 
             for index, source in enumerate(
                 sources,
@@ -279,6 +315,7 @@ else:
                     "N/A",
                 )
 
+
                 with st.expander(
                     f"Source {index} — "
                     f"{title} | "
@@ -289,6 +326,14 @@ else:
                         "**Document ID:**",
                         source.get(
                             "document_id",
+                            "N/A",
+                        ),
+                    )
+
+                    st.write(
+                        "**Chunk ID:**",
+                        source.get(
+                            "chunk_id",
                             "N/A",
                         ),
                     )
@@ -318,7 +363,9 @@ else:
                 "The Copilot could not process the request."
             )
 
-            st.exception(error)
+            st.exception(
+                error
+            )
 
 
 # =========================================================
