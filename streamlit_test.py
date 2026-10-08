@@ -1,39 +1,69 @@
 import streamlit as st
 
+from src.rag_pipeline import ask_rag
+
+
 st.set_page_config(
-    page_title="Streamlit RAG Test",
+    page_title="RAG Cloud Test",
     page_icon="🧪",
 )
 
-st.title("Streamlit RAG Import Test")
-
-st.write("Step 1: Streamlit loaded successfully.")
-
-try:
-    from src.rag_pipeline import ask_rag
-
-    st.success("Step 2: RAG pipeline imported successfully.")
-
-except Exception as error:
-    st.error("RAG pipeline import failed.")
-    st.exception(error)
-    st.stop()
+st.title("RAG Cloud Test")
 
 
-if "question" not in st.session_state:
-    st.session_state.question = ""
-
-
-if st.button("Axway 504"):
-    st.session_state.question = (
-        "PaymentService through Axway is returning HTTP 504."
-    )
-
-
-st.text_area(
-    "Question",
-    key="question",
+question = (
+    "PaymentService through Axway is returning HTTP 504. "
+    "What should I investigate and have we seen this before?"
 )
 
 
-st.success("Step 3: Application completed successfully.")
+st.write("Test question:")
+
+st.info(question)
+
+
+if st.button("Run RAG Test"):
+
+    st.write("Starting RAG pipeline...")
+
+    try:
+
+        with st.spinner("Running RAG..."):
+
+            result = ask_rag(question)
+
+        st.success("RAG completed successfully.")
+
+        st.subheader("Answer")
+
+        st.write(
+            result.get(
+                "answer",
+                "No answer returned",
+            )
+        )
+
+        st.subheader("Sources")
+
+        st.write(
+            len(
+                result.get(
+                    "sources",
+                    [],
+                )
+            )
+        )
+
+        st.write(
+            "Cache hit:",
+            result.get(
+                "cache_hit",
+                False,
+            ),
+        )
+
+    except Exception as error:
+
+        st.error("RAG execution failed.")
+
+        st.exception(error)
