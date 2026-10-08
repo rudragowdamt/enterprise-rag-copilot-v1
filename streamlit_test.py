@@ -1,4 +1,14 @@
+import time
 import streamlit as st
+
+MAX_REQUESTS = 10
+REQUEST_COOLDOWN_SECONDS = 5
+
+if "request_count" not in st.session_state:
+    st.session_state.request_count = 0
+
+if "last_request_time" not in st.session_state:
+    st.session_state.last_request_time = 0.0
 
 from src.rag_pipeline import ask_rag
 
@@ -149,15 +159,35 @@ if st.button(
     use_container_width=True,
 ):
 
-    if not question.strip():
+if not question.strip():
 
-        st.warning(
-            "Please enter an integration support question."
-        )
+    st.warning(
+        "Please enter an integration support question."
+    )
 
-    else:
+elif st.session_state.request_count >= MAX_REQUESTS:
 
-        try:
+    st.error(
+        "Demo request limit reached for this session."
+    )
+
+elif (
+    time.time()
+    - st.session_state.last_request_time
+    < REQUEST_COOLDOWN_SECONDS
+):
+
+    st.warning(
+        "Please wait a few seconds before "
+        "submitting another request."
+    )
+
+else:
+
+    st.session_state.request_count += 1
+    st.session_state.last_request_time = time.time()
+
+    try:
 
             with st.spinner(
                 "Searching enterprise knowledge and "
