@@ -1,12 +1,11 @@
 import time
-
 import streamlit as st
 
 from src.rag_pipeline import ask_rag
 
 
 # =========================================================
-# PAGE CONFIGURATION
+# PAGE CONFIG
 # =========================================================
 
 st.set_page_config(
@@ -17,7 +16,7 @@ st.set_page_config(
 
 
 # =========================================================
-# CONSTANTS
+# SETTINGS
 # =========================================================
 
 MAX_REQUESTS = 10
@@ -25,32 +24,9 @@ MAX_QUESTION_LENGTH = 500
 REQUEST_COOLDOWN_SECONDS = 5
 
 
-EXAMPLE_QUESTIONS = {
-    "Axway 504": (
-        "PaymentService through Axway is returning HTTP 504. "
-        "What should I investigate and have we seen this before?"
-    ),
-    "Boomi Failure": (
-        "A Boomi production process started failing immediately "
-        "after deployment. What should support check?"
-    ),
-    "Layer7 401": (
-        "Layer7 suddenly returns 401 for many clients after "
-        "an IdP change. What is a likely cause?"
-    ),
-    "SFTP Issue": (
-        "Our partner SFTP host key changed. Can we bypass "
-        "validation to restore service?"
-    ),
-}
-
-
 # =========================================================
 # SESSION STATE
 # =========================================================
-
-if "question_input" not in st.session_state:
-    st.session_state.question_input = ""
 
 if "request_count" not in st.session_state:
     st.session_state.request_count = 0
@@ -58,12 +34,9 @@ if "request_count" not in st.session_state:
 if "last_request_time" not in st.session_state:
     st.session_state.last_request_time = 0.0
 
-if "rag_result" not in st.session_state:
-    st.session_state.rag_result = None
-
 
 # =========================================================
-# CUSTOM STYLING
+# STYLING
 # =========================================================
 
 st.markdown(
@@ -74,21 +47,21 @@ st.markdown(
         font-size: 42px;
         font-weight: 700;
         color: #6C3FC5;
-        margin-bottom: 0px;
+        margin-bottom: 5px;
     }
 
     .subtitle {
         font-size: 18px;
         color: #777777;
-        margin-bottom: 25px;
+        margin-bottom: 22px;
     }
 
     .info-box {
         background-color: rgba(108, 63, 197, 0.08);
         border-left: 5px solid #6C3FC5;
-        padding: 15px;
+        padding: 16px;
         border-radius: 8px;
-        margin-bottom: 20px;
+        margin-bottom: 22px;
     }
 
     </style>
@@ -125,10 +98,10 @@ st.markdown(
     <div class="info-box">
         <b>How it works:</b>
         Ask an enterprise integration support question.
-        The Copilot searches synthetic runbooks,
-        architecture documents and historical incidents
-        before generating a grounded answer with
-        supporting sources.
+        The Copilot retrieves relevant information from
+        synthetic runbooks, architecture documents and
+        historical incidents, then generates a grounded
+        response using Amazon Bedrock.
     </div>
     """,
     unsafe_allow_html=True,
@@ -144,27 +117,28 @@ with st.sidebar:
     st.header("About the Copilot")
 
     st.write(
-        "Built using Retrieval-Augmented Generation (RAG) "
-        "for enterprise integration operations."
+        "Enterprise integration support assistant built "
+        "using Retrieval-Augmented Generation (RAG)."
     )
 
-    st.markdown("**AI Stack**")
+    st.divider()
+
+    st.markdown("### AI Stack")
 
     st.write("🧠 Amazon Bedrock")
     st.write("🔢 Titan Text Embeddings V2")
-    st.write("💬 Claude Haiku")
-    st.write("🔎 Semantic Vector Retrieval")
-    st.write("⚡ FastAPI")
+    st.write("💬 Claude Haiku 4.5")
+    st.write("🔎 Semantic Retrieval")
     st.write("🎨 Streamlit")
 
     st.divider()
 
-    st.markdown("**Knowledge Base**")
+    st.markdown("### Knowledge Base")
 
     st.write("📄 24 enterprise documents")
     st.write("🧩 76 retrieval chunks")
     st.write("🧪 12 golden evaluation questions")
-    st.write("🎯 Retrieval Recall@5: 90.28%")
+    st.write("🎯 Recall@5: 90.28%")
 
     st.divider()
 
@@ -180,33 +154,60 @@ with st.sidebar:
 
 st.subheader("Try an example")
 
-columns = st.columns(4)
-
-for column, (label, example) in zip(
-    columns,
-    EXAMPLE_QUESTIONS.items(),
-):
-    with column:
-
-        if st.button(
-            label,
-            key=f"example_{label}",
-            use_container_width=True,
-        ):
-            st.session_state.question_input = example
-            st.session_state.rag_result = None
-            st.rerun()
+example_questions = {
+    "Axway 504": (
+        "PaymentService through Axway is returning HTTP 504. "
+        "What should I investigate and have we seen this before?"
+    ),
+    "Boomi Failure": (
+        "A Boomi production process started failing immediately "
+        "after deployment. What should support check?"
+    ),
+    "Layer7 401": (
+        "Layer7 suddenly returns 401 for many clients after "
+        "an IdP change. What is a likely cause?"
+    ),
+    "SFTP Issue": (
+        "Our partner SFTP host key changed. Can we bypass "
+        "validation to restore service?"
+    ),
+}
 
 
 # =========================================================
-# QUESTION
+# EXAMPLE SELECTOR
 # =========================================================
 
-st.subheader("Ask the Copilot")
+selected_example = st.selectbox(
+    "Choose an example or enter your own question below",
+    options=[
+        "Custom question",
+        "Axway 504",
+        "Boomi Failure",
+        "Layer7 401",
+        "SFTP Issue",
+    ],
+)
+
+
+if selected_example == "Custom question":
+
+    default_question = ""
+
+else:
+
+    default_question = example_questions[
+        selected_example
+    ]
+
+
+# =========================================================
+# QUESTION INPUT
+# =========================================================
 
 question = st.text_area(
     "Describe the integration issue",
-    key="question_input",
+    value=default_question,
     height=120,
     max_chars=MAX_QUESTION_LENGTH,
     placeholder=(
@@ -217,17 +218,45 @@ question = st.text_area(
 
 
 # =========================================================
-# RAG EXECUTION
+# REQUEST INFORMATION
 # =========================================================
 
-investigate = st.button(
+remaining_requests = max(
+    MAX_REQUESTS
+    - st.session_state.request_count,
+    0,
+)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric(
+        "Documents",
+        "24",
+    )
+
+with col2:
+    st.metric(
+        "Retrieval Chunks",
+        "76",
+    )
+
+with col3:
+    st.metric(
+        "Demo Requests Remaining",
+        remaining_requests,
+    )
+
+
+# =========================================================
+# INVESTIGATE
+# =========================================================
+
+if st.button(
     "🔍 Investigate Issue",
     type="primary",
     use_container_width=True,
-)
-
-
-if investigate:
+):
 
     clean_question = question.strip()
 
@@ -240,9 +269,14 @@ if investigate:
     elif len(clean_question) > MAX_QUESTION_LENGTH:
 
         st.warning(
-            "Question is too long. "
-            f"Please keep it under "
+            f"Please keep the question under "
             f"{MAX_QUESTION_LENGTH} characters."
+        )
+
+    elif st.session_state.request_count >= MAX_REQUESTS:
+
+        st.error(
+            "Demo request limit reached for this session."
         )
 
     elif (
@@ -252,169 +286,186 @@ if investigate:
     ):
 
         st.warning(
-            "Please wait a few seconds "
-            "before submitting another request."
-        )
-
-    elif st.session_state.request_count >= MAX_REQUESTS:
-
-        st.error(
-            "Demo request limit reached. "
-            "This session allows a maximum of "
-            f"{MAX_REQUESTS} requests."
+            "Please wait a few seconds before "
+            "submitting another request."
         )
 
     else:
 
+        # Count only valid requests
         st.session_state.request_count += 1
+
         st.session_state.last_request_time = time.time()
 
-        with st.spinner(
-            "Searching enterprise knowledge and "
-            "generating a grounded response..."
-        ):
+        st.write(
+            "Searching enterprise knowledge..."
+        )
 
-            try:
+        try:
+
+            with st.spinner(
+                "Running RAG retrieval and generating "
+                "a grounded response..."
+            ):
 
                 result = ask_rag(
                     clean_question
                 )
 
-                st.session_state.rag_result = result
+            # =============================================
+            # SUCCESS
+            # =============================================
 
-            except Exception as error:
+            st.success(
+                "Analysis completed successfully."
+            )
 
-                st.session_state.rag_result = None
 
-                st.error(
-                    "The Copilot could not process the request."
+            # =============================================
+            # CACHE STATUS
+            # =============================================
+
+            if result.get(
+                "cache_hit",
+                False,
+            ):
+
+                st.info(
+                    "⚡ Response served from RAG cache."
                 )
 
-                st.exception(error)
+            else:
+
+                st.info(
+                    "🧠 Fresh RAG analysis completed "
+                    "using Amazon Bedrock."
+                )
 
 
-# =========================================================
-# DISPLAY RESULT
-# =========================================================
+            # =============================================
+            # ANSWER
+            # =============================================
 
-result = st.session_state.rag_result
-
-if result:
-
-    st.success(
-        "Analysis completed"
-    )
-
-    if result.get("cache_hit"):
-
-        st.caption(
-            "⚡ Response served from cache."
-        )
-
-    else:
-
-        st.caption(
-            "🧠 Fresh RAG analysis completed."
-        )
-
-    st.subheader(
-        "🤖 Copilot Response"
-    )
-
-    st.markdown(
-        result.get(
-            "answer",
-            "No answer was returned.",
-        )
-    )
-
-
-    # =====================================================
-    # RETRIEVED SOURCES
-    # =====================================================
-
-    st.subheader(
-        "📚 Retrieved Evidence"
-    )
-
-    st.caption(
-        "The following knowledge chunks were retrieved "
-        "before the AI generated its response."
-    )
-
-    sources = result.get(
-        "sources",
-        [],
-    )
-
-    if not sources:
-
-        st.info(
-            "No retrieval evidence was returned."
-        )
-
-    for index, source in enumerate(
-        sources,
-        start=1,
-    ):
-
-        score = float(
-            source.get(
-                "similarity_score",
-                0.0,
-            )
-        )
-
-        title = source.get(
-            "title",
-            "Unknown document",
-        )
-
-        section = source.get(
-            "section",
-            "Unknown section",
-        )
-
-        with st.expander(
-            f"Source {index} — "
-            f"{title} | "
-            f"{section} | "
-            f"Score {score:.4f}"
-        ):
-
-            st.write(
-                "**Document ID:** "
-                f"{source.get('document_id', 'N/A')}"
+            st.subheader(
+                "🤖 Copilot Response"
             )
 
-            st.write(
-                "**Chunk ID:** "
-                f"{source.get('chunk_id', 'N/A')}"
+            st.markdown(
+                result.get(
+                    "answer",
+                    "No answer returned.",
+                )
             )
 
-            st.write(
-                "**Section:** "
-                f"{section}"
+
+            # =============================================
+            # RETRIEVED EVIDENCE
+            # =============================================
+
+            st.subheader(
+                "📚 Retrieved Evidence"
             )
 
-            st.write(
-                "**Source:** "
-                f"{source.get('source', 'N/A')}"
+            st.caption(
+                "Knowledge chunks retrieved before "
+                "the AI generated its response."
             )
 
-            st.write(
-                "**Similarity Score:** "
-                f"{score:.4f}"
+            sources = result.get(
+                "sources",
+                [],
             )
 
-            st.progress(
-                min(
-                    max(
-                        score,
+            if not sources:
+
+                st.warning(
+                    "No retrieval evidence was returned."
+                )
+
+
+            for index, source in enumerate(
+                sources,
+                start=1,
+            ):
+
+                score = float(
+                    source.get(
+                        "similarity_score",
                         0.0,
-                    ),
-                    1.0,
+                    )
                 )
+
+                title = source.get(
+                    "title",
+                    "Unknown Document",
+                )
+
+                section = source.get(
+                    "section",
+                    "Unknown Section",
+                )
+
+                with st.expander(
+                    f"Source {index} — "
+                    f"{title} | "
+                    f"Score {score:.4f}"
+                ):
+
+                    st.write(
+                        "**Document ID:**",
+                        source.get(
+                            "document_id",
+                            "N/A",
+                        ),
+                    )
+
+                    st.write(
+                        "**Chunk ID:**",
+                        source.get(
+                            "chunk_id",
+                            "N/A",
+                        ),
+                    )
+
+                    st.write(
+                        "**Section:**",
+                        section,
+                    )
+
+                    st.write(
+                        "**Source:**",
+                        source.get(
+                            "source",
+                            "N/A",
+                        ),
+                    )
+
+                    st.write(
+                        "**Similarity Score:**",
+                        f"{score:.4f}",
+                    )
+
+                    safe_score = min(
+                        max(
+                            score,
+                            0.0,
+                        ),
+                        1.0,
+                    )
+
+                    st.progress(
+                        safe_score
+                    )
+
+
+        except Exception as error:
+
+            st.error(
+                "RAG execution failed."
+            )
+
+            st.exception(
+                error
             )
 
 
