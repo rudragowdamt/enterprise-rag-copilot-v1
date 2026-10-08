@@ -116,93 +116,93 @@ This allows the engineer to investigate the issue using both \*\*documented trou
 
 ```text
 
-&#x20;                   ┌─────────────────────────────┐
+                   ┌─────────────────────────────┐
 
-&#x20;                   │       Streamlit UI          │
+                   │       Streamlit UI          │
 
-&#x20;                   │ Enterprise Integration      │
+                   │ Enterprise Integration      │
 
-&#x20;                   │       AI Copilot            │
+                   │       AI Copilot            │
 
-&#x20;                   └──────────────┬──────────────┘
+                   └──────────────┬──────────────┘
 
-&#x20;                                  │
+                                  │
 
-&#x20;                                  ▼
+                                  ▼
 
-&#x20;                   ┌─────────────────────────────┐
+                   ┌─────────────────────────────┐
 
-&#x20;                   │       RAG Pipeline          │
+                   │       RAG Pipeline          │
 
-&#x20;                   │         ask\_rag()           │
+                   │         ask\_rag()           │
 
-&#x20;                   └──────────────┬──────────────┘
+                   └──────────────┬──────────────┘
 
-&#x20;                                  │
+                                  │
 
-&#x20;                                  ▼
+                                  ▼
 
-&#x20;                   ┌─────────────────────────────┐
+                   ┌─────────────────────────────┐
 
-&#x20;                   │ Amazon Titan Text           │
+                   │ Amazon Titan Text           │
 
-&#x20;                   │ Embeddings V2               │
+                   │ Embeddings V2               │
 
-&#x20;                   │ Query → 1024-d Vector       │
+                   │ Query → 1024-d Vector       │
 
-&#x20;                   └──────────────┬──────────────┘
+                   └──────────────┬──────────────┘
 
-&#x20;                                  │
+                                  │
 
-&#x20;                                  ▼
+                                  ▼
 
-&#x20;                   ┌─────────────────────────────┐
+                   ┌─────────────────────────────┐
 
-&#x20;                   │ Semantic Retrieval          │
+                   │ Semantic Retrieval          │
 
-&#x20;                   │ Cosine Similarity           │
+                   │ Cosine Similarity           │
 
-&#x20;                   │ Top-K Knowledge Chunks      │
+                   │ Top-K Knowledge Chunks      │
 
-&#x20;                   └──────────────┬──────────────┘
+                   └──────────────┬──────────────┘
 
-&#x20;                                  │
+                                  │
 
-&#x20;                                  ▼
+                                  ▼
 
-&#x20;                   ┌─────────────────────────────┐
+                   ┌─────────────────────────────┐
 
-&#x20;                   │ Grounded Context Builder    │
+                   │ Grounded Context Builder    │
 
-&#x20;                   │ Retrieved Evidence          │
+                   │ Retrieved Evidence          │
 
-&#x20;                   └──────────────┬──────────────┘
+                   └──────────────┬──────────────┘
 
-&#x20;                                  │
+                                  │
 
-&#x20;                                  ▼
+                                  ▼
 
-&#x20;                   ┌─────────────────────────────┐
+                   ┌─────────────────────────────┐
 
-&#x20;                   │ Amazon Bedrock              │
+                   │ Amazon Bedrock              │
 
-&#x20;                   │ Claude Haiku                │
+                   │ Claude Haiku                │
 
-&#x20;                   │ Grounded Generation         │
+                   │ Grounded Generation         │
 
-&#x20;                   └──────────────┬──────────────┘
+                   └──────────────┬──────────────┘
 
-&#x20;                                  │
+                                  │
 
-&#x20;                                  ▼
+                                  ▼
 
-&#x20;                   ┌─────────────────────────────┐
+                   ┌─────────────────────────────┐
 
-&#x20;                   │ Answer + Source Citations   │
+                   │ Answer + Source Citations   │
 
-&#x20;                   │ + Retrieval Evidence        │
+                   │ + Retrieval Evidence        │
 
-&#x20;                   └─────────────────────────────┘
+                   └─────────────────────────────┘
 
 ```
 
@@ -224,47 +224,47 @@ The repository also includes a \*\*FastAPI REST interface\*\*, allowing the same
 
 Enterprise Knowledge
 
-&#x20;       ↓
+       ↓
 
 Document Loading
 
-&#x20;       ↓
+       ↓
 
 Structure-Aware Chunking
 
-&#x20;       ↓
+       ↓
 
 Titan Embeddings
 
-&#x20;       ↓
+       ↓
 
 Persisted Chunk Vectors
 
-&#x20;       ↓
+       ↓
 
 User Question
 
-&#x20;       ↓
+       ↓
 
 Query Embedding
 
-&#x20;       ↓
+       ↓
 
 Cosine Similarity Search
 
-&#x20;       ↓
+       ↓
 
 Top-K Retrieval
 
-&#x20;       ↓
+       ↓
 
 Grounded Context
 
-&#x20;       ↓
+       ↓
 
 Claude Haiku
 
-&#x20;       ↓
+       ↓
 
 Answer + Citations
 
@@ -572,7 +572,7 @@ Example request:
 
 {
 
-&#x20; "question": "Why is Axway returning HTTP 504?"
+ "question": "Why is Axway returning HTTP 504?"
 
 }
 
