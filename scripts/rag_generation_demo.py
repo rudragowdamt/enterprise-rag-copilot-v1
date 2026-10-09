@@ -18,9 +18,10 @@ EMBEDDING_FILE = Path(
 
 
 question = (
-    "Our Axway API Gateway is returning HTTP 429 Too Many Requests. "
+    "Our Broadcom Layer7 API Gateway cannot establish an HTTPS connection "
+    "to the backend because of an SSL/TLS handshake failure. "
     "What are the possible root causes, troubleshooting steps, "
-    "and recommended resolutions for rate limits and quotas?"
+    "and recommended resolutions?"
 )
 
 

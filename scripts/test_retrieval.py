@@ -12,8 +12,9 @@ EMBEDDING_FILE = Path(
 )
 
 query = (
-    "Our Axway API Gateway is returning HTTP 429 Too Many Requests. "
-    "What causes this error and how should we troubleshoot rate limits and quotas?"
+    "Our Broadcom Layer7 API Gateway cannot establish an HTTPS connection "
+    "to the backend because of an SSL/TLS handshake failure. "
+    "What should we check?"
 )
 
 records = load_embedding_records(
