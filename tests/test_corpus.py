@@ -11,13 +11,17 @@ EXPECTED_DOC_TYPES = {
     "policy",
     "procedure",
     "architecture",
+    "boomi",
+    "tibco",
+    "axway",
+    "layer7",
 }
 
 
 def test_corpus_document_count():
     docs = load_corpus(KNOWLEDGE_ROOT)
 
-    assert len(docs) == 24
+    assert len(docs) == 28
 
 
 def test_corpus_document_types():

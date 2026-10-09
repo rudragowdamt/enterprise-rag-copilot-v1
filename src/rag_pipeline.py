@@ -1,4 +1,5 @@
 from pathlib import Path
+from src.input_guardrails import validate_question
 
 from src.embeddings import embed_text
 from src.retrieval import (
@@ -26,8 +27,7 @@ def ask_rag(
     embedding_file: Path = DEFAULT_EMBEDDING_FILE,
 ) -> dict:
 
-    if not question.strip():
-        raise ValueError("Question cannot be empty.")
+    question = validate_question(question)
     
     cached_result = get_cached_result(
     question
