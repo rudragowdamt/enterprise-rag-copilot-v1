@@ -12,9 +12,8 @@ EMBEDDING_FILE = Path(
 )
 
 query = (
-    "Boomi SFTP connection is timing out on port 22. "
-    "How can I troubleshoot network connectivity? "
-    "Provide the exact Windows PowerShell command."
+    "Our TIBCO BusinessWorks application cannot connect to the JMS broker. "
+    "What are the possible causes and troubleshooting steps?"
 )
 
 records = load_embedding_records(

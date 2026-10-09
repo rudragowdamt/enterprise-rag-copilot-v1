@@ -16,13 +16,13 @@ EMBEDDING_FILE = Path(
     "data/embeddings/chunk_embeddings.json"
 )
 
+
 question = (
-    "Our Boomi SFTP integration is timing out when connecting "
-    "to the SFTP server on port 22. "
-    "Provide step-by-step troubleshooting instructions, "
-    "including the exact Windows PowerShell connectivity "
-    "test command and expected result."
+    "Our TIBCO BusinessWorks application cannot connect to the JMS broker. "
+    "What are the possible root causes, troubleshooting steps, "
+    "and recommended resolutions?"
 )
+
 
 records = load_embedding_records(
     EMBEDDING_FILE
