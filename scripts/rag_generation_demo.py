@@ -18,9 +18,9 @@ EMBEDDING_FILE = Path(
 
 
 question = (
-    "Our TIBCO BusinessWorks application cannot connect to the JMS broker. "
+    "Our Axway API Gateway is returning HTTP 429 Too Many Requests. "
     "What are the possible root causes, troubleshooting steps, "
-    "and recommended resolutions?"
+    "and recommended resolutions for rate limits and quotas?"
 )
 
 

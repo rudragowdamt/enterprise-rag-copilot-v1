@@ -12,8 +12,8 @@ EMBEDDING_FILE = Path(
 )
 
 query = (
-    "Our TIBCO BusinessWorks application cannot connect to the JMS broker. "
-    "What are the possible causes and troubleshooting steps?"
+    "Our Axway API Gateway is returning HTTP 429 Too Many Requests. "
+    "What causes this error and how should we troubleshoot rate limits and quotas?"
 )
 
 records = load_embedding_records(
