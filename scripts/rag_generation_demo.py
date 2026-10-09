@@ -17,8 +17,11 @@ EMBEDDING_FILE = Path(
 )
 
 question = (
-    "PaymentService through Axway is returning HTTP 504. "
-    "What should I investigate and have we seen this before?"
+    "Our Boomi SFTP integration is timing out when connecting "
+    "to the SFTP server on port 22. "
+    "Provide step-by-step troubleshooting instructions, "
+    "including the exact Windows PowerShell connectivity "
+    "test command and expected result."
 )
 
 records = load_embedding_records(

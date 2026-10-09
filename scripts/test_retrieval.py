@@ -12,8 +12,9 @@ EMBEDDING_FILE = Path(
 )
 
 query = (
-    "PaymentService through Axway is returning HTTP 504. "
-    "What should I investigate?"
+    "Boomi SFTP connection is timing out on port 22. "
+    "How can I troubleshoot network connectivity? "
+    "Provide the exact Windows PowerShell command."
 )
 
 records = load_embedding_records(

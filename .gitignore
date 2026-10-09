@@ -8,3 +8,7 @@ __pycache__/
 data/cache/
 .streamlit/secrets.toml
 enterprise-rag-demo-policy.json
+data/embeddings/chunk_embeddings_v1_backup.json
+
+github-oidc-trust.json
+github-bedrock-policy.json
