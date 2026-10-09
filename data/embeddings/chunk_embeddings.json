@@ -7,7 +7,7 @@
     "doc_type": "architecture",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\architecture\\enterprise_integration_architecture.md",
+    "source": "data/knowledge/architecture/enterprise_integration_architecture.md",
     "content": "# Enterprise Integration Platform Architecture\nDocument ID: ARC-001\n\nThe fictional Acme Enterprise integration estate uses multiple integration technologies. Boomi supports SaaS/application and batch integrations. Axway API Gateway exposes selected partner and external APIs. Layer7 API Gateway protects internal and customer-facing APIs with authentication and policy enforcement. SFTP supports legacy partner file exchange. Integration services depend on identity providers, databases, ERP/CRM platforms and downstream microservices.",
     "embedding": [
       -0.04629107937216759,
@@ -1044,7 +1044,7 @@
     "doc_type": "architecture",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\architecture\\enterprise_integration_architecture.md",
+    "source": "data/knowledge/architecture/enterprise_integration_architecture.md",
     "content": "Troubleshooting must follow the transaction across layers. A gateway error does not automatically mean the gateway is the root cause.",
     "embedding": [
       -0.07340311259031296,
@@ -2081,7 +2081,7 @@
     "doc_type": "architecture",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\architecture\\middleware_platform_overview.md",
+    "source": "data/knowledge/architecture/middleware_platform_overview.md",
     "content": "# Middleware Platform Support Overview\nDocument ID: ARC-003\n\nIntegration Operations provides L2/L3 operational support for Boomi runtimes and processes, Axway and Layer7 API gateways, SFTP flows and common integration dependencies. Application owners retain ownership of business application defects; infrastructure, network, database and IAM teams own their respective platforms. P1 incidents use a coordinated major-incident bridge.",
     "embedding": [
       -0.057362522929906845,
@@ -3118,7 +3118,7 @@
     "doc_type": "architecture",
     "system": "PaymentService",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\architecture\\payment_integration_flow.md",
+    "source": "data/knowledge/architecture/payment_integration_flow.md",
     "content": "# Payment Integration Flow\nDocument ID: ARC-002\nService: PaymentService",
     "embedding": [
       -0.07722495496273041,
@@ -4155,7 +4155,7 @@
     "doc_type": "architecture",
     "system": "PaymentService",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\architecture\\payment_integration_flow.md",
+    "source": "data/knowledge/architecture/payment_integration_flow.md",
     "content": "Client -> Axway API Gateway -> Payment Integration Service -> Payment Backend -> Payment Database\n\nAuthentication occurs at the API edge. Axway performs routing and policy enforcement. The Payment Integration Service transforms and validates the request before invoking the backend.",
     "embedding": [
       -0.05667821317911148,
@@ -5192,7 +5192,7 @@
     "doc_type": "architecture",
     "system": "PaymentService",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\architecture\\payment_integration_flow.md",
+    "source": "data/knowledge/architecture/payment_integration_flow.md",
     "content": "401 normally requires authentication/policy investigation. 504 requires latency/dependency tracing. A database bottleneck can manifest to the client as a gateway 504.",
     "embedding": [
       0.019343798980116844,
@@ -6229,7 +6229,7 @@
     "doc_type": "incident",
     "system": "Boomi",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC001_boomi_prod_failure.md",
+    "source": "data/knowledge/incidents/INC001_boomi_prod_failure.md",
     "content": "# INC001 - Boomi Order Integration Failure\nIncident: INC001\nSeverity: P1\nPlatform: Boomi\nService: OrderIntegration",
     "embedding": [
       -0.0863964706659317,
@@ -7266,7 +7266,7 @@
     "doc_type": "incident",
     "system": "Boomi",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC001_boomi_prod_failure.md",
+    "source": "data/knowledge/incidents/INC001_boomi_prod_failure.md",
     "content": "Production order messages stopped reaching ERP after a connection component was changed during a release.",
     "embedding": [
       -0.018737398087978363,
@@ -8303,7 +8303,7 @@
     "doc_type": "incident",
     "system": "Boomi",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC001_boomi_prod_failure.md",
+    "source": "data/knowledge/incidents/INC001_boomi_prod_failure.md",
     "content": "Boomi runtime was healthy. Process Reporting showed authentication failures against the ERP endpoint. The deployment contained an incorrect production credential reference.",
     "embedding": [
       -0.07253269106149673,
@@ -9340,7 +9340,7 @@
     "doc_type": "incident",
     "system": "Boomi",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC001_boomi_prod_failure.md",
+    "source": "data/knowledge/incidents/INC001_boomi_prod_failure.md",
     "content": "The team rolled back the connection component to the last known-good packaged component, validated one order transaction, and then released queued processing.",
     "embedding": [
       -0.005797486752271652,
@@ -10377,7 +10377,7 @@
     "doc_type": "incident",
     "system": "Boomi",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC001_boomi_prod_failure.md",
+    "source": "data/knowledge/incidents/INC001_boomi_prod_failure.md",
     "content": "Runtime health alone does not prove end-to-end integration health. Deployment and connection-component versions must be correlated during triage.",
     "embedding": [
       -0.03249216079711914,
@@ -11414,7 +11414,7 @@
     "doc_type": "incident",
     "system": "Layer7",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC002_layer7_certificate_expiry.md",
+    "source": "data/knowledge/incidents/INC002_layer7_certificate_expiry.md",
     "content": "# INC002 - Layer7 Authentication Outage After Certificate Rotation\nIncident: INC002\nSeverity: P1\nPlatform: Layer7\nService: CustomerAPI",
     "embedding": [
       -0.02206367626786232,
@@ -12451,7 +12451,7 @@
     "doc_type": "incident",
     "system": "Layer7",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC002_layer7_certificate_expiry.md",
+    "source": "data/knowledge/incidents/INC002_layer7_certificate_expiry.md",
     "content": "CustomerAPI returned HTTP 401 shortly after the identity provider rotated its signing certificate.",
     "embedding": [
       0.025399399921298027,
@@ -13488,7 +13488,7 @@
     "doc_type": "incident",
     "system": "Layer7",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC002_layer7_certificate_expiry.md",
+    "source": "data/knowledge/incidents/INC002_layer7_certificate_expiry.md",
     "content": "Layer7 token validation was using stale signing-key/trust information.",
     "embedding": [
       0.00594200799241662,
@@ -14525,7 +14525,7 @@
     "doc_type": "incident",
     "system": "Layer7",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC002_layer7_certificate_expiry.md",
+    "source": "data/knowledge/incidents/INC002_layer7_certificate_expiry.md",
     "content": "The approved signing-key/trust configuration was refreshed and authentication tests passed.",
     "embedding": [
       0.011684366501867771,
@@ -15562,7 +15562,7 @@
     "doc_type": "incident",
     "system": "Layer7",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC002_layer7_certificate_expiry.md",
+    "source": "data/knowledge/incidents/INC002_layer7_certificate_expiry.md",
     "content": "For sudden widespread 401 responses, compare IdP key/certificate changes before assuming client credentials are incorrect.",
     "embedding": [
       0.012915575876832008,
@@ -16599,7 +16599,7 @@
     "doc_type": "incident",
     "system": "Axway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC003_axway_payment_504.md",
+    "source": "data/knowledge/incidents/INC003_axway_payment_504.md",
     "content": "# INC003 - Payment API HTTP 504\nIncident: INC003\nSeverity: P1\nPlatform: Axway\nService: PaymentService",
     "embedding": [
       -0.002481629839166999,
@@ -17636,7 +17636,7 @@
     "doc_type": "incident",
     "system": "Axway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC003_axway_payment_504.md",
+    "source": "data/knowledge/incidents/INC003_axway_payment_504.md",
     "content": "Payment API calls through Axway returned intermittent 504 responses.",
     "embedding": [
       -0.006636680569499731,
@@ -18673,7 +18673,7 @@
     "doc_type": "incident",
     "system": "Axway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC003_axway_payment_504.md",
+    "source": "data/knowledge/incidents/INC003_axway_payment_504.md",
     "content": "Gateway nodes were healthy. Network connectivity succeeded, but backend response time increased beyond the gateway timeout. The payment backend was waiting on an exhausted database connection pool.",
     "embedding": [
       -0.06050187349319458,
@@ -19710,7 +19710,7 @@
     "doc_type": "incident",
     "system": "Axway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC003_axway_payment_504.md",
+    "source": "data/knowledge/incidents/INC003_axway_payment_504.md",
     "content": "Database slowness caused backend requests to exceed the API gateway timeout.",
     "embedding": [
       -0.06659941375255585,
@@ -20747,7 +20747,7 @@
     "doc_type": "incident",
     "system": "Axway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC003_axway_payment_504.md",
+    "source": "data/knowledge/incidents/INC003_axway_payment_504.md",
     "content": "Database blocking activity was resolved and the application connection pool recovered. Gateway timeout was not increased.",
     "embedding": [
       -0.05701924115419388,
@@ -21784,7 +21784,7 @@
     "doc_type": "incident",
     "system": "Axway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC003_axway_payment_504.md",
+    "source": "data/knowledge/incidents/INC003_axway_payment_504.md",
     "content": "A gateway 504 can be a downstream symptom. Trace the complete dependency chain before modifying gateway timeouts.",
     "embedding": [
       -0.00571239460259676,
@@ -22821,7 +22821,7 @@
     "doc_type": "incident",
     "system": "CustomerSync",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC004_database_connection.md",
+    "source": "data/knowledge/incidents/INC004_database_connection.md",
     "content": "# INC004 - Integration Database Connectivity Degradation\nIncident: INC004\nSeverity: P2\nService: CustomerSync",
     "embedding": [
       -0.062856525182724,
@@ -23858,7 +23858,7 @@
     "doc_type": "incident",
     "system": "CustomerSync",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC004_database_connection.md",
+    "source": "data/knowledge/incidents/INC004_database_connection.md",
     "content": "Customer synchronization showed intermittent database connection-acquisition timeouts.",
     "embedding": [
       -0.09436145424842834,
@@ -24895,7 +24895,7 @@
     "doc_type": "incident",
     "system": "CustomerSync",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC004_database_connection.md",
+    "source": "data/knowledge/incidents/INC004_database_connection.md",
     "content": "A long-running reporting query consumed database resources and caused application connection pools to queue.",
     "embedding": [
       -0.028644733130931854,
@@ -25932,7 +25932,7 @@
     "doc_type": "incident",
     "system": "CustomerSync",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC004_database_connection.md",
+    "source": "data/knowledge/incidents/INC004_database_connection.md",
     "content": "The database team terminated the problematic workload and tuned the query. Integration latency returned to baseline.",
     "embedding": [
       -0.05212884396314621,
@@ -26969,7 +26969,7 @@
     "doc_type": "incident",
     "system": "PartnerFileExchange",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC005_sftp_partner_failure.md",
+    "source": "data/knowledge/incidents/INC005_sftp_partner_failure.md",
     "content": "# INC005 - Partner SFTP Transfer Failure\nIncident: INC005\nSeverity: P2\nService: PartnerFileExchange",
     "embedding": [
       0.004771869629621506,
@@ -28006,7 +28006,7 @@
     "doc_type": "incident",
     "system": "PartnerFileExchange",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC005_sftp_partner_failure.md",
+    "source": "data/knowledge/incidents/INC005_sftp_partner_failure.md",
     "content": "Outbound partner files failed after the partner rebuilt its SFTP server.",
     "embedding": [
       0.012541756965219975,
@@ -29043,7 +29043,7 @@
     "doc_type": "incident",
     "system": "PartnerFileExchange",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC005_sftp_partner_failure.md",
+    "source": "data/knowledge/incidents/INC005_sftp_partner_failure.md",
     "content": "The partner host key changed. The integration correctly rejected the untrusted fingerprint.",
     "embedding": [
       -0.027812330052256584,
@@ -30080,7 +30080,7 @@
     "doc_type": "incident",
     "system": "PartnerFileExchange",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC005_sftp_partner_failure.md",
+    "source": "data/knowledge/incidents/INC005_sftp_partner_failure.md",
     "content": "The new fingerprint was independently verified through the approved partner-security process and then updated under change control.",
     "embedding": [
       -0.036197200417518616,
@@ -31117,7 +31117,7 @@
     "doc_type": "incident",
     "system": "PartnerFileExchange",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\incidents\\INC005_sftp_partner_failure.md",
+    "source": "data/knowledge/incidents/INC005_sftp_partner_failure.md",
     "content": "Never bypass host-key validation merely to restore service.",
     "embedding": [
       -0.015794096514582634,
@@ -32154,7 +32154,7 @@
     "doc_type": "policy",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\policies\\change_policy.md",
+    "source": "data/knowledge/policies/change_policy.md",
     "content": "# Production Change and Emergency Change Policy\nDocument ID: POL-CHG-001\n\nAll production middleware changes require traceability and authorization. Standard changes follow normal approval. Emergency changes must still document risk, implementation, validation and rollback. Direct unrecorded configuration edits are prohibited. Incident pressure does not remove the need for change traceability.",
     "embedding": [
       -0.05237893387675285,
@@ -33191,7 +33191,7 @@
     "doc_type": "policy",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\policies\\p1_escalation.md",
+    "source": "data/knowledge/policies/p1_escalation.md",
     "content": "# P1 Major Incident Escalation Policy\nDocument ID: POL-P1-001\n\nDeclare P1 when a critical production service has severe business impact, widespread transaction failure or no acceptable workaround. Start the major-incident bridge, assign technical and incident leads, preserve correlation IDs/log evidence, engage required platform/dependency owners, communicate at agreed intervals and maintain a timeline. Restoration is prioritized over speculative root-cause changes; RCA follows stabilization.",
     "embedding": [
       0.030094558373093605,
@@ -34228,7 +34228,7 @@
     "doc_type": "procedure",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\procedures\\certificate_rotation.md",
+    "source": "data/knowledge/procedures/certificate_rotation.md",
     "content": "# Middleware Certificate Rotation Procedure\nDocument ID: SOP-CERT-001\n\nMaintain certificate owner, purpose, endpoints and expiry metadata. Test the new certificate and chain in non-production. For production rotation, back up configuration, implement through change control, validate TLS/authentication end-to-end and monitor errors after change. Never copy private keys into tickets, source control or RAG knowledge documents.",
     "embedding": [
       0.04990445077419281,
@@ -35265,7 +35265,7 @@
     "doc_type": "procedure",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\procedures\\disaster_recovery.md",
+    "source": "data/knowledge/procedures/disaster_recovery.md",
     "content": "# Integration Platform Disaster Recovery Procedure\nDocument ID: SOP-DR-001\n\nDR invocation requires an authorized decision according to business-impact criteria. Confirm primary-site impairment, identify affected critical services, activate the documented secondary runtime/gateway components, validate secrets/certificates/connectivity, and perform end-to-end business validation. Record recovery time and data/replay considerations. Failback must be planned and controlled rather than automatic.",
     "embedding": [
       0.03733167424798012,
@@ -36302,7 +36302,7 @@
     "doc_type": "procedure",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\procedures\\middleware_health_check.md",
+    "source": "data/knowledge/procedures/middleware_health_check.md",
     "content": "# Daily Middleware Health Check\nDocument ID: SOP-OPS-001\n\nReview Boomi runtime/process health, Axway and Layer7 node status, API error/latency trends, certificate-expiry alerts, SFTP queue/failure status, critical dependency health and unresolved P1/P2 incidents. Health checks should include business-flow validation rather than platform-up status alone.",
     "embedding": [
       -0.05296400934457779,
@@ -37339,7 +37339,7 @@
     "doc_type": "procedure",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\procedures\\production_deployment.md",
+    "source": "data/knowledge/procedures/production_deployment.md",
     "content": "# Middleware Production Deployment Procedure\nDocument ID: SOP-DEPLOY-001\n\nProduction changes require approved change records, implementation plan, validation plan and rollback plan. Capture current versions before deployment. After deployment, validate platform health plus at least one representative end-to-end transaction. If critical failures begin immediately after deployment and rollback criteria are met, prefer the approved rollback over ad-hoc production modifications.",
     "embedding": [
       -0.015054121613502502,
@@ -38376,7 +38376,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\api_5xx_troubleshooting.md",
+    "source": "data/knowledge/runbooks/api_5xx_troubleshooting.md",
     "content": "# Generic API 5xx Troubleshooting Runbook\nDocument ID: RB-API-001",
     "embedding": [
       -0.09682580828666687,
@@ -39413,7 +39413,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\api_5xx_troubleshooting.md",
+    "source": "data/knowledge/runbooks/api_5xx_troubleshooting.md",
     "content": "Capture correlation ID and timestamp; identify which layer produced the 5xx; trace client -> gateway -> integration runtime -> backend -> database/dependency; compare error rate and latency with baseline; check deployments and infrastructure events; inspect a representative transaction end-to-end; and search known-error and historical-incident records before changing production configuration.",
     "embedding": [
       -0.008728595450520515,
@@ -40450,7 +40450,7 @@
     "doc_type": "runbook",
     "system": "Axway API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\axway_backend_connectivity.md",
+    "source": "data/knowledge/runbooks/axway_backend_connectivity.md",
     "content": "# Axway Backend Connectivity Failure\nDocument ID: RB-AXWAY-002\nPlatform: Axway API Gateway",
     "embedding": [
       -0.06460178643465042,
@@ -41487,7 +41487,7 @@
     "doc_type": "runbook",
     "system": "Axway API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\axway_backend_connectivity.md",
+    "source": "data/knowledge/runbooks/axway_backend_connectivity.md",
     "content": "Connection refused, connection reset, DNS failure, TLS handshake error or intermittent backend connection errors.",
     "embedding": [
       -0.033927321434020996,
@@ -42524,7 +42524,7 @@
     "doc_type": "runbook",
     "system": "Axway API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\axway_backend_connectivity.md",
+    "source": "data/knowledge/runbooks/axway_backend_connectivity.md",
     "content": "Validate backend hostname and port, DNS resolution, route/firewall path, TLS certificate chain, truststore, supported protocol/cipher configuration and backend listener health. Compare the failing node with another gateway node to isolate node-specific configuration.",
     "embedding": [
       -0.046658869832754135,
@@ -43561,7 +43561,7 @@
     "doc_type": "runbook",
     "system": "Axway API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\axway_backend_connectivity.md",
+    "source": "data/knowledge/runbooks/axway_backend_connectivity.md",
     "content": "Restore the dependency or configuration, then execute a controlled API request and confirm gateway and backend logs share the same correlation ID.",
     "embedding": [
       -0.01568419672548771,
@@ -44598,7 +44598,7 @@
     "doc_type": "runbook",
     "system": "Axway API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\axway_gateway_504.md",
+    "source": "data/knowledge/runbooks/axway_gateway_504.md",
     "content": "# Axway API Gateway HTTP 504 Runbook\nDocument ID: RB-AXWAY-001\nPlatform: Axway API Gateway",
     "embedding": [
       -0.0071855634450912476,
@@ -45635,7 +45635,7 @@
     "doc_type": "runbook",
     "system": "Axway API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\axway_gateway_504.md",
+    "source": "data/knowledge/runbooks/axway_gateway_504.md",
     "content": "HTTP 504 generally indicates that the gateway did not receive a timely response from an upstream or downstream dependency.",
     "embedding": [
       0.0019328230991959572,
@@ -46672,7 +46672,7 @@
     "doc_type": "runbook",
     "system": "Axway API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\axway_gateway_504.md",
+    "source": "data/knowledge/runbooks/axway_gateway_504.md",
     "content": "1. Capture API name, gateway node, correlation ID, backend endpoint and timestamp.\n2. Confirm whether the 504 is generated by Axway or another intermediary.\n3. Test backend connectivity from the gateway network.\n4. Check DNS resolution, routing, firewall and TLS handshake.\n5. Compare backend response time with configured gateway timeout.\n6. Review recent policy, routing or backend URL changes.\n7. Check backend health, thread/connection pools and database dependencies.\n8. Search historical incidents for the same API and dependency.\n9. Do not simply increase timeout until the slow dependency is understood.",
     "embedding": [
       0.010284703224897385,
@@ -47709,7 +47709,7 @@
     "doc_type": "runbook",
     "system": "Axway API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\axway_gateway_504.md",
+    "source": "data/knowledge/runbooks/axway_gateway_504.md",
     "content": "Escalate to the backend owner when the gateway is healthy but the backend is slow or unavailable. Engage network/security teams for connectivity or TLS failures.",
     "embedding": [
       -0.05013854801654816,
@@ -48746,7 +48746,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\boomi_atom_unavailable.md",
+    "source": "data/knowledge/runbooks/boomi_atom_unavailable.md",
     "content": "# Boomi Atom or Molecule Unavailable Runbook\nDocument ID: RB-BOOMI-002\nPlatform: Boomi",
     "embedding": [
       -0.08423467725515366,
@@ -49783,7 +49783,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\boomi_atom_unavailable.md",
+    "source": "data/knowledge/runbooks/boomi_atom_unavailable.md",
     "content": "Scheduled processes do not start, executions remain queued, or the runtime appears offline.",
     "embedding": [
       -0.03675268590450287,
@@ -50820,7 +50820,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\boomi_atom_unavailable.md",
+    "source": "data/knowledge/runbooks/boomi_atom_unavailable.md",
     "content": "1. Confirm runtime status in Boomi platform.\n2. For Molecule deployments, determine whether one node or the complete cluster is affected.\n3. Check host availability, CPU, memory, disk space and filesystem access.\n4. Review runtime/container logs around the failure timestamp.\n5. Validate outbound connectivity required by the runtime.\n6. Confirm certificates and proxy configuration have not changed.\n7. Restart a runtime only under the approved operational procedure.\n8. For a multi-node Molecule, prefer controlled failover over restarting all nodes simultaneously.",
     "embedding": [
       -0.04397014155983925,
@@ -51857,7 +51857,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\boomi_atom_unavailable.md",
+    "source": "data/knowledge/runbooks/boomi_atom_unavailable.md",
     "content": "After recovery, execute a health-check process and validate one end-to-end business transaction before releasing queued traffic.",
     "embedding": [
       -0.03747474402189255,
@@ -52894,7 +52894,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "PROD",
-    "source": "data\\knowledge\\runbooks\\boomi_process_failure.md",
+    "source": "data/knowledge/runbooks/boomi_process_failure.md",
     "content": "# Boomi Production Process Failure Runbook\nDocument ID: RB-BOOMI-001\nPlatform: Boomi\nEnvironment: PROD\nOwner: Integration Operations",
     "embedding": [
       -0.08281543105840683,
@@ -53931,7 +53931,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "PROD",
-    "source": "data\\knowledge\\runbooks\\boomi_process_failure.md",
+    "source": "data/knowledge/runbooks/boomi_process_failure.md",
     "content": "Troubleshoot a Boomi integration process that fails repeatedly in production.",
     "embedding": [
       -0.11729571223258972,
@@ -54968,7 +54968,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "PROD",
-    "source": "data\\knowledge\\runbooks\\boomi_process_failure.md",
+    "source": "data/knowledge/runbooks/boomi_process_failure.md",
     "content": "- Process executions move to Error state.\n- Documents are not delivered to the target application.\n- Retry count increases.\n- Business transactions remain pending.",
     "embedding": [
       -0.07072509080171585,
@@ -56005,7 +56005,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "PROD",
-    "source": "data\\knowledge\\runbooks\\boomi_process_failure.md",
+    "source": "data/knowledge/runbooks/boomi_process_failure.md",
     "content": "1. Confirm the affected process, Atom/Molecule, environment, execution ID and failure start time.\n2. Review Process Reporting and capture the first meaningful connector or process error.\n3. Verify whether the Atom or Molecule nodes are online and healthy.\n4. Check recent deployment/package changes for the affected process.\n5. Validate source and target connectivity independently.\n6. Check credentials, certificates, API tokens and connection-component changes.\n7. Inspect document-level errors and determine whether failures affect all messages or specific payloads.\n8. Validate disk, memory and runtime resource health where applicable.\n9. Retry one controlled transaction only after the suspected dependency is healthy.\n10. If failures continue, stop uncontrolled retries and escalate with execution IDs and evidence.",
     "embedding": [
       -0.021210890263319016,
@@ -57042,7 +57042,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "PROD",
-    "source": "data\\knowledge\\runbooks\\boomi_process_failure.md",
+    "source": "data/knowledge/runbooks/boomi_process_failure.md",
     "content": "Treat as P1 when a production critical business flow is unavailable with no workaround.",
     "embedding": [
       -0.06489498168230057,
@@ -58079,7 +58079,7 @@
     "doc_type": "runbook",
     "system": "Boomi",
     "environment": "PROD",
-    "source": "data\\knowledge\\runbooks\\boomi_process_failure.md",
+    "source": "data/knowledge/runbooks/boomi_process_failure.md",
     "content": "Attach execution ID, process name, Atom/Molecule name, error message, timestamps, deployment version and affected transaction count.",
     "embedding": [
       -0.06309477239847183,
@@ -59116,7 +59116,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\certificate_expiry.md",
+    "source": "data/knowledge/runbooks/certificate_expiry.md",
     "content": "# Middleware Certificate Expiry Runbook\nDocument ID: RB-CERT-001",
     "embedding": [
       -0.03960319980978966,
@@ -60153,7 +60153,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\certificate_expiry.md",
+    "source": "data/knowledge/runbooks/certificate_expiry.md",
     "content": "TLS handshake failures, PKIX/trust errors, API authentication failures or sudden connectivity loss around a certificate expiry/rotation.",
     "embedding": [
       -0.014002053998410702,
@@ -61190,7 +61190,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\certificate_expiry.md",
+    "source": "data/knowledge/runbooks/certificate_expiry.md",
     "content": "Identify the certificate presented on the failing path, inspect expiry and chain, determine whether the issue concerns identity or trust, validate hostname/SAN, confirm intermediate certificates, and check relevant gateway/runtime truststores. Compare against recent certificate-change records.",
     "embedding": [
       0.01712808758020401,
@@ -62227,7 +62227,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\certificate_expiry.md",
+    "source": "data/knowledge/runbooks/certificate_expiry.md",
     "content": "Monitor certificates before expiry, maintain ownership metadata and test rotations in non-production before production implementation.",
     "embedding": [
       -0.038751743733882904,
@@ -63264,7 +63264,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\database_pool_exhaustion.md",
+    "source": "data/knowledge/runbooks/database_pool_exhaustion.md",
     "content": "# Integration Database Connection Pool Exhaustion\nDocument ID: RB-DB-001",
     "embedding": [
       -0.02660294994711876,
@@ -64301,7 +64301,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\database_pool_exhaustion.md",
+    "source": "data/knowledge/runbooks/database_pool_exhaustion.md",
     "content": "Connection acquisition timeout, increased integration latency, 5xx errors and queued transactions.",
     "embedding": [
       -0.03775331377983093,
@@ -65338,7 +65338,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\database_pool_exhaustion.md",
+    "source": "data/knowledge/runbooks/database_pool_exhaustion.md",
     "content": "Measure active/idle/max connections, database availability, long-running queries, leaked connections and traffic spikes. Determine whether pool exhaustion is the cause or a symptom of database slowness. Do not increase pool limits without validating database capacity.",
     "embedding": [
       -0.00777072599157691,
@@ -66375,7 +66375,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\database_pool_exhaustion.md",
+    "source": "data/knowledge/runbooks/database_pool_exhaustion.md",
     "content": "Resolve the underlying database/query issue, allow connections to recover, then validate integration latency and error rate.",
     "embedding": [
       -0.06472062319517136,
@@ -67412,7 +67412,7 @@
     "doc_type": "runbook",
     "system": "Broadcom Layer7 API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\layer7_oauth_401.md",
+    "source": "data/knowledge/runbooks/layer7_oauth_401.md",
     "content": "# Layer7 OAuth HTTP 401 Troubleshooting\nDocument ID: RB-L7-001\nPlatform: Broadcom Layer7 API Gateway",
     "embedding": [
       -0.04970461502671242,
@@ -68449,7 +68449,7 @@
     "doc_type": "runbook",
     "system": "Broadcom Layer7 API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\layer7_oauth_401.md",
+    "source": "data/knowledge/runbooks/layer7_oauth_401.md",
     "content": "Clients receive HTTP 401 while the backend service may remain healthy.",
     "embedding": [
       -0.015471503138542175,
@@ -69486,7 +69486,7 @@
     "doc_type": "runbook",
     "system": "Broadcom Layer7 API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\layer7_oauth_401.md",
+    "source": "data/knowledge/runbooks/layer7_oauth_401.md",
     "content": "1. Determine whether rejection occurs at the gateway or backend.\n2. Validate Authorization header presence and token format.\n3. Check token expiration, issuer, audience and required scopes.\n4. Validate OAuth/JWT verification policy and identity-provider availability.\n5. Check signing certificate/JWK rotation and gateway trust configuration.\n6. Review recent policy migrations or configuration changes.\n7. Confirm clock synchronization when token time claims appear invalid.\n8. Use a known-good token for a controlled test; never place production secrets in incident notes.",
     "embedding": [
       -0.009210875257849693,
@@ -70523,7 +70523,7 @@
     "doc_type": "runbook",
     "system": "Broadcom Layer7 API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\layer7_oauth_401.md",
+    "source": "data/knowledge/runbooks/layer7_oauth_401.md",
     "content": "Expired token, incorrect audience/scope, rotated signing key, stale JWK cache, IdP outage, or an incorrect gateway policy.",
     "embedding": [
       -0.015455855056643486,
@@ -71560,7 +71560,7 @@
     "doc_type": "runbook",
     "system": "Broadcom Layer7 API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\layer7_policy_failure.md",
+    "source": "data/knowledge/runbooks/layer7_policy_failure.md",
     "content": "# Layer7 Gateway Policy Failure Runbook\nDocument ID: RB-L7-002\nPlatform: Broadcom Layer7 API Gateway",
     "embedding": [
       -0.045028481632471085,
@@ -72597,7 +72597,7 @@
     "doc_type": "runbook",
     "system": "Broadcom Layer7 API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\layer7_policy_failure.md",
+    "source": "data/knowledge/runbooks/layer7_policy_failure.md",
     "content": "API returns unexpected 4xx/5xx responses after a policy deployment or migration.",
     "embedding": [
       -0.020172005519270897,
@@ -73634,7 +73634,7 @@
     "doc_type": "runbook",
     "system": "Broadcom Layer7 API Gateway",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\layer7_policy_failure.md",
+    "source": "data/knowledge/runbooks/layer7_policy_failure.md",
     "content": "Identify the policy revision, compare it with the last known-good version, inspect failed assertions, validate context variables and routing assertions, check referenced encapsulated assertions, certificates and cluster properties, and correlate gateway audit logs with the request ID. If the incident began immediately after an approved deployment, follow rollback criteria rather than making untracked production edits.",
     "embedding": [
       0.010862919501960278,
@@ -74671,7 +74671,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\sftp_failure.md",
+    "source": "data/knowledge/runbooks/sftp_failure.md",
     "content": "# Enterprise SFTP Integration Failure\nDocument ID: RB-SFTP-001",
     "embedding": [
       -0.010434405878186226,
@@ -75708,7 +75708,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\sftp_failure.md",
+    "source": "data/knowledge/runbooks/sftp_failure.md",
     "content": "File transfer fails, authentication is rejected, host key changes, connection times out or files remain unprocessed.",
     "embedding": [
       -0.008539410308003426,
@@ -76745,7 +76745,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\sftp_failure.md",
+    "source": "data/knowledge/runbooks/sftp_failure.md",
     "content": "Confirm hostname/port, network reachability, service account status, SSH key validity, host-key fingerprint, remote directory permissions, filename convention, disk space and partner availability. A changed host key must be verified through an approved security channel before acceptance.",
     "embedding": [
       -0.01165632251650095,
@@ -77782,7 +77782,7 @@
     "doc_type": "runbook",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\runbooks\\sftp_failure.md",
+    "source": "data/knowledge/runbooks/sftp_failure.md",
     "content": "Retry a controlled file after the dependency is restored and confirm that duplicate-file protection prevents duplicate business processing.",
     "embedding": [
       -0.006396031007170677,
@@ -78819,7 +78819,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "\ufeff# Boomi SFTP Connector \u2014 Connection and Authentication Troubleshooting",
     "embedding": [
       -0.04862365499138832,
@@ -79856,7 +79856,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Vendor: Boomi\nProduct: Boomi Integration \u2014 SFTP Connector\nCategory: SFTP Connectivity and Authentication\nDocument Type: Technical Troubleshooting Runbook\nSource: https://help.boomi.com/docs/Atomsphere/Integration/Connectors/SFTP_connection\nSource Status: Official vendor reference plus original diagnostic guidance\nError Codes: No universal error code assigned\nApplicability: Current SFTP connector; verify against deployed connector version",
     "embedding": [
       -0.018164610490202904,
@@ -80893,7 +80893,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "A Boomi integration fails when connecting to an SFTP server,\nauthenticating, or transferring files.",
     "embedding": [
       -0.021663885563611984,
@@ -81930,7 +81930,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "- Connection timed out\n- Connection refused\n- Authentication failed\n- SSH host key verification failure\n- Permission denied when reading or writing files\n\nThese are general failure categories, not guaranteed exact Boomi error messages.",
     "embedding": [
       -0.045834727585315704,
@@ -82967,7 +82967,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "- Authorized access to Boomi execution details\n- SFTP hostname and port\n- SFTP account username\n- Access to the relevant runtime or assistance from its administrator\n- Approval before changing production configuration\n\nNever include passwords, private keys, or secrets in incident tickets.",
     "embedding": [
       -0.019895944744348526,
@@ -84004,7 +84004,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "1. Open the relevant Boomi process execution details.\n2. Locate the failed SFTP connector operation.\n3. Record the process name, execution ID, timestamp and runtime.\n4. Capture the sanitized error message.\n5. Determine whether the failure occurred during connection,\n   authentication, file listing, upload or download.\n\nExpected Result:\nThe exact failure stage and affected SFTP connection are identified.",
     "embedding": [
       -0.04332192987203598,
@@ -85041,7 +85041,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Inspect the SFTP connection component.\n\nVerify:\n- Host: Correct SFTP hostname or IP address\n- Port: Correct SSH/SFTP port (commonly 22)\n- User Name: Correct authorized account\n- Key Authentication: None, Key File Path or Key File Content\n- Remote Directory: Correct target folder\n- Connection Timeout (ms): Appropriate for the environment\n- Read Timeout (ms): Appropriate for individual network reads\n\nExpected Result:\nConnection settings match the SFTP server configuration.\n\nDo not change production values without authorization.",
     "embedding": [
       0.021453525871038437,
@@ -86078,7 +86078,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Run from the Boomi runtime host or its equivalent network environment:\n\nTest-NetConnection sftp.example.com -Port 22\n\nReplace sftp.example.com and 22 with the actual endpoint details.\n\nExpected Result:\nTcpTestSucceeded : True\n\nIf False:\n- Check hostname and DNS resolution.\n- Check server availability.\n- Check firewall rules and network routing.\n- Confirm the server is listening on the configured port.\n\nA successful TCP test does not prove SFTP authentication works.",
     "embedding": [
       -0.0012948213843628764,
@@ -87115,7 +87115,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Run:\n\nnc -vz -w 10 sftp.example.com 22\n\nExpected Result:\nA successful TCP connection message.\n\nIf nc is unavailable, request an approved equivalent from\nthe infrastructure team.\n\nDo not assume a network test from your laptop represents\nconnectivity from the Boomi runtime.",
     "embedding": [
       -0.04868962615728378,
@@ -88152,7 +88152,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Confirm which authentication method the SFTP server expects.\n\nFor username/password:\n- Verify the username.\n- Confirm credentials are valid through an approved process.\n- Check whether the account is locked or expired.\n\nFor SSH key authentication:\n- Confirm the correct Key Authentication option.\n- Verify the configured key file exists on the runtime if using a path.\n- Confirm the runtime account has permission to read the key.\n- Verify the matching public key is authorized on the SFTP server.\n- Check the private key passphrase configuration if applicable.\n\nExpected Result:\nThe SFTP server accepts the configured authentication method.\n\nAvoid repeated login attempts that could lock the account.",
     "embedding": [
       0.030577313154935837,
@@ -89189,7 +89189,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Review the Known Host Entry configuration.\n\n- Obtain the approved SFTP server host key or fingerprint\n  through a trusted administrator or vendor channel.\n- Compare it with the configured server identity.\n- If the server host key has changed, investigate why.\n- Update the trusted host entry only after verification.\n\nExpected Result:\nThe configured server identity matches the trusted server.\n\nNever disable host key verification simply to bypass a mismatch.",
     "embedding": [
       0.01903071068227291,
@@ -90226,7 +90226,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Where an approved SSH client is available, run:\n\nsftp -P 22 username@sftp.example.com\n\nVerify the server host key against an independently trusted\nfingerprint before accepting a first-time connection.\n\nFor an approved private key:\n\nsftp -i /path/to/private_key -P 22 username@sftp.example.com\n\nExpected Result:\nAn interactive sftp> prompt after successful authentication.\n\nFor a non-production test account, permitted diagnostic\ncommands may include:\n\npwd\nls\n\nDo not upload, delete, rename, or modify production files\nduring diagnostic testing without authorization.",
     "embedding": [
       -9.51319671003148e-05,
@@ -91263,7 +91263,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Check:\n- Remote Directory path\n- Directory existence\n- Read permission for download/list operations\n- Write permission for upload operations\n- Server-side folder restrictions\n\nExpected Result:\nThe account can access the intended directory and perform\nthe authorized file operation.",
     "embedding": [
       -0.03505333140492439,
@@ -92300,7 +92300,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Check Connection Timeout (ms) and Read Timeout (ms).\n\nConnection Timeout concerns establishing the connection.\nRead Timeout concerns individual network read operations,\nnot necessarily the entire file transfer duration.\n\nCheck server-side timeout settings and network latency.\n\nChange values only with approval and supporting evidence.",
     "embedding": [
       -0.0019841152243316174,
@@ -93337,7 +93337,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "1. Execute an approved non-production or controlled test.\n2. Confirm SFTP authentication succeeds.\n3. Confirm the expected file operation completes.\n4. Review Boomi execution details for errors.\n5. Verify downstream processing and file integrity.\n6. Check for duplicate or partially processed files.\n\nExpected Result:\nThe process completes successfully without unexpected\nbusiness side effects.",
     "embedding": [
       -0.010092188604176044,
@@ -94374,7 +94374,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "- Process and execution identifiers\n- Failure timestamp and timezone\n- Runtime environment\n- SFTP connector version\n- Sanitized error message\n- Target hostname and port\n- TCP connectivity result\n- Authentication method (not credentials)\n- Host key verification outcome\n- Relevant server-side logs",
     "embedding": [
       -0.013480870984494686,
@@ -95411,7 +95411,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "Boomi SFTP connection:\nhttps://help.boomi.com/docs/Atomsphere/Integration/Connectors/SFTP_connection\n\nBoomi SFTP connector:\nhttps://help.boomi.com/docs/Atomsphere/Integration/Connectors/SFTP_connector",
     "embedding": [
       -0.0310790054500103,
@@ -96448,7 +96448,7 @@
     "doc_type": "boomi",
     "system": "UNKNOWN",
     "environment": "UNKNOWN",
-    "source": "data\\knowledge\\vendor_errors\\boomi\\boomi_sftp_troubleshooting.md",
+    "source": "data/knowledge/vendor_errors/boomi/boomi_sftp_troubleshooting.md",
     "content": "- Provide numbered technical steps with expected results.\n- Distinguish verified vendor configuration from general diagnostics.\n- Do not invent vendor error codes or product-specific commands.\n- Do not expose credentials, private keys, or sensitive file contents.\n- Request missing environment details when exact instructions depend on them.\n- Cite the source document used.",
     "embedding": [
       -0.004322607070207596,
