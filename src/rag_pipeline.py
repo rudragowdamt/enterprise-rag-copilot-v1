@@ -4,6 +4,7 @@ from pathlib import Path
 
 from src.app_logging import get_logger
 from src.citation_validator import validate_citations
+from src.document_access import filter_authorized_records
 from src.input_guardrails import validate_question
 from src.embeddings import embed_text
 
@@ -39,6 +40,11 @@ CITATION_FAILURE_MESSAGE = (
     "against the retrieved sources."
 )
 
+ACCESS_DENIED_MESSAGE = (
+    "No knowledge documents are available "
+    "for your authorized systems."
+)
+
 logger = get_logger(__name__)
 
 
@@ -46,6 +52,7 @@ def ask_rag(
     question: str,
     top_k: int = 5,
     embedding_file: Path = DEFAULT_EMBEDDING_FILE,
+    allowed_systems: list[str] | None = None,
 ) -> dict:
 
     start = time.perf_counter()
@@ -54,46 +61,77 @@ def ask_rag(
         # Step 1: Validate question.
         question = validate_question(question)
 
-        # Step 2: Check cache.
-        cached_result = get_cached_result(question)
+        # None retains legacy behavior for existing callers.
+        # An empty list explicitly denies access.
+        access_scoped = allowed_systems is not None
 
-        if (
-            cached_result is not None
-            and cached_result.get("answer") not in (
-                GUARDRAIL_BLOCKED_MESSAGE,
-                CITATION_FAILURE_MESSAGE,
-            )
-        ):
-            logger.info(
-                "rag_complete status=cache_hit elapsed_ms=%.0f",
-                (time.perf_counter() - start) * 1000,
-            )
+        # Step 2: Check cache only for legacy unscoped calls.
+        # Scoped requests must never reuse another user's cache.
+        if not access_scoped:
+            cached_result = get_cached_result(question)
 
-            return {
-                **cached_result,
-                "cache_hit": True,
-            }
+            if (
+                cached_result is not None
+                and cached_result.get("answer") not in (
+                    GUARDRAIL_BLOCKED_MESSAGE,
+                    CITATION_FAILURE_MESSAGE,
+                )
+            ):
+                logger.info(
+                    "rag_complete status=cache_hit elapsed_ms=%.0f",
+                    (time.perf_counter() - start) * 1000,
+                )
+
+                return {
+                    **cached_result,
+                    "cache_hit": True,
+                }
 
         # Step 3: Load knowledge base.
         records = load_embedding_records(
             embedding_file
         )
 
-        # Step 4: Generate question embedding.
+        # Step 4: Filter documents before retrieval.
+        if access_scoped:
+            records = filter_authorized_records(
+                records,
+                allowed_systems,
+            )
+
+            logger.info(
+                "rag_access_filter authorized_records=%d",
+                len(records),
+            )
+
+            if not records:
+                logger.info(
+                    "rag_complete status=no_authorized_documents "
+                    "elapsed_ms=%.0f",
+                    (time.perf_counter() - start) * 1000,
+                )
+
+                return {
+                    "question": question,
+                    "answer": ACCESS_DENIED_MESSAGE,
+                    "sources": [],
+                    "cache_hit": False,
+                }
+
+        # Step 5: Generate question embedding.
         query_embedding = embed_text(
             question
         )
 
-        # Step 5: Retrieve documents.
+        # Step 6: Retrieve relevant documents.
         results = retrieve_top_k(
             query_embedding,
             records,
             top_k=top_k,
         )
 
-        # Step 6: Check retrieval confidence.
+        # Step 7: Validate retrieval confidence.
         if not has_sufficient_evidence(results):
-
             logger.info(
                 "rag_complete status=insufficient_evidence "
                 "source_count=%d elapsed_ms=%.0f",
@@ -108,35 +146,33 @@ def ask_rag(
                 "cache_hit": False,
             }
 
-        # Step 7: Build RAG context.
+        # Step 8: Build RAG context.
         context = build_context(results)
 
-        # Step 8: Build prompt.
+        # Step 9: Build prompt.
         prompt = build_prompt(
             question,
             context,
         )
 
-        # Step 9: Generate answer with Bedrock.
+        # Step 10: Generate answer using Bedrock Guardrails.
         answer = generate_answer(prompt)
 
-        # Step 10: Check security and citations.
+        # Step 11: Check security and citations.
         if answer == GUARDRAIL_BLOCKED_MESSAGE:
-
             status = "guardrail_blocked"
 
         elif not validate_citations(
             answer,
             len(results),
         ):
-
             answer = CITATION_FAILURE_MESSAGE
             status = "citation_failed"
 
         else:
             status = "success"
 
-        # Step 11: Remove embedding vectors.
+        # Step 12: Remove embedding vectors.
         clean_sources = [
             {
                 key: value
@@ -146,7 +182,7 @@ def ask_rag(
             for source in results
         ]
 
-        # Step 12: Prepare response.
+        # Step 13: Prepare response.
         result = {
             "question": question,
             "answer": answer,
@@ -154,14 +190,14 @@ def ask_rag(
             "cache_hit": False,
         }
 
-        # Step 13: Cache only successful answers.
-        if status == "success":
+        # Step 14: Cache only successful unscoped answers.
+        if status == "success" and not access_scoped:
             save_cached_result(
                 question,
                 result,
             )
 
-        # Step 14: Log execution status.
+        # Step 15: Log execution status.
         logger.info(
             "rag_complete status=%s "
             "source_count=%d elapsed_ms=%.0f",
@@ -173,11 +209,9 @@ def ask_rag(
         return result
 
     except Exception:
-
-        # Do not log questions, secrets or document content.
+        # Avoid logging sensitive questions or document text.
         logger.error(
             "rag_failed stage=pipeline elapsed_ms=%.0f",
             (time.perf_counter() - start) * 1000,
         )
-
         raise

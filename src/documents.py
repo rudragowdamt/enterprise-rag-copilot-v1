@@ -1,3 +1,4 @@
+
 from dataclasses import dataclass
 from pathlib import Path
 import re
@@ -14,18 +15,16 @@ class EnterpriseDocument:
     content: str
 
 
-META = re.compile(r"^---\n(.*?)\n---\n", re.S)
+META = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.S)
 
 
-def extract_field(text: str, field_name: str, default: str = "UNKNOWN") -> str:
-    """
-    Extract a simple metadata field from document content.
+def extract_field(
+    text: str,
+    field_name: str,
+    default: str = "UNKNOWN",
+) -> str:
+    """Extract a metadata field from document text."""
 
-    Example:
-        Platform: Boomi
-        Environment: PROD
-        Document ID: RB-BOOMI-001
-    """
     pattern = rf"(?im)^{re.escape(field_name)}:\s*(.+)$"
     match = re.search(pattern, text)
 
@@ -36,13 +35,8 @@ def extract_field(text: str, field_name: str, default: str = "UNKNOWN") -> str:
 
 
 def infer_doc_type(path: Path) -> str:
-    """
-    Infer document type from its parent directory.
+    """Infer document type from its directory."""
 
-    Example:
-        knowledge/runbooks/file.md -> runbook
-        knowledge/incidents/file.md -> incident
-    """
     mapping = {
         "runbooks": "runbook",
         "incidents": "incident",
@@ -51,14 +45,15 @@ def infer_doc_type(path: Path) -> str:
         "policies": "policy",
     }
 
-    return mapping.get(path.parent.name.lower(), path.parent.name.lower())
+    return mapping.get(
+        path.parent.name.lower(),
+        path.parent.name.lower(),
+    )
 
 
 def extract_title(text: str, path: Path) -> str:
-    """
-    Use the first Markdown H1 heading as the title.
-    Fall back to the filename when no H1 exists.
-    """
+    """Extract Markdown title or use filename."""
+
     match = re.search(r"(?m)^#\s+(.+)$", text)
 
     if match:
@@ -67,13 +62,40 @@ def extract_title(text: str, path: Path) -> str:
     return path.stem.replace("_", " ").title()
 
 
+def determine_system(text: str) -> str:
+    """Extract system using supported metadata fields."""
+
+    for field in ("Platform", "Service", "System"):
+        value = extract_field(text, field)
+
+        if value != "UNKNOWN":
+            return value
+
+    # Vendor metadata is used when system metadata is missing.
+    vendor = extract_field(text, "Vendor")
+
+    if vendor != "UNKNOWN":
+        vendor_mapping = {
+            "boomi": "Boomi",
+            "tibco": "TIBCO BusinessWorks",
+            "axway": "Axway",
+            "broadcom": "Broadcom Layer7 API Gateway",
+            "layer7": "Layer7",
+        }
+
+        vendor_lower = vendor.lower()
+
+        for keyword, system in vendor_mapping.items():
+            if keyword in vendor_lower:
+                return system
+
+    return "UNKNOWN"
+
+
 def load_document(path: Path) -> EnterpriseDocument:
     text = path.read_text(encoding="utf-8")
 
-    # ---------------------------------------------------------
-    # Format 1:
-    # Existing documents containing YAML-style front matter.
-    # ---------------------------------------------------------
+    # Format 1: YAML-style front matter.
     match = META.match(text)
 
     if match:
@@ -88,27 +110,34 @@ def load_document(path: Path) -> EnterpriseDocument:
 
         return EnterpriseDocument(
             path=path,
-            title=metadata.get("title", extract_title(content, path)),
-            doc_type=metadata.get("doc_type", infer_doc_type(path)),
-            system=metadata.get("system", "UNKNOWN"),
-            environment=metadata.get("environment", "UNKNOWN"),
-            document_id=metadata.get("document_id", path.stem),
+            title=metadata.get(
+                "title",
+                extract_title(content, path),
+            ),
+            doc_type=metadata.get(
+                "doc_type",
+                infer_doc_type(path),
+            ),
+            system=metadata.get(
+                "system",
+                determine_system(content),
+            ),
+            environment=metadata.get(
+                "environment",
+                "UNKNOWN",
+            ),
+            document_id=metadata.get(
+                "document_id",
+                path.stem,
+            ),
             content=content,
         )
 
-    # ---------------------------------------------------------
-    # Format 2:
-    # Enterprise documents without YAML front matter.
-    # Metadata is extracted/inferred from content and path.
-    # ---------------------------------------------------------
+    # Format 2: Markdown without YAML front matter.
     title = extract_title(text, path)
     doc_type = infer_doc_type(path)
 
-    system = extract_field(text, "Platform")
-
-    if system == "UNKNOWN":
-        system = extract_field(text, "Service")
-
+    system = determine_system(text)
     environment = extract_field(text, "Environment")
 
     document_id = extract_field(text, "Document ID")
