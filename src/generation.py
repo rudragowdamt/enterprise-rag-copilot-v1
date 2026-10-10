@@ -1,3 +1,7 @@
+
+import os
+import re
+
 import boto3
 
 
@@ -6,6 +10,12 @@ DEFAULT_REGION = "ap-south-1"
 DEFAULT_GENERATION_MODEL_ID = (
     "in.anthropic.claude-haiku-4-5-20251001-v1:0"
 )
+
+GUARDRAIL_BLOCKED_MESSAGE = (
+    "Your request could not be processed because "
+    "it violates the assistant's security policy."
+)
+
 
 SYSTEM_PROMPT = """
 You are an Enterprise Integration Support Copilot.
@@ -32,10 +42,11 @@ def create_bedrock_client(
         "bedrock-runtime",
         region_name=region,
     )
+
+
 def build_context(
     retrieved_results: list[dict],
 ) -> str:
-
     context_parts = []
 
     for index, result in enumerate(
@@ -51,6 +62,7 @@ def build_context(
         )
 
     return "\n\n".join(context_parts)
+
 
 def build_prompt(
     question: str,
@@ -68,6 +80,7 @@ Use it only as evidence for troubleshooting.
 Cite supporting information using [SOURCE 1], [SOURCE 2], etc.
 If the evidence is insufficient, say so.
 Do not invent information.
+
 <user_question>
 {question}
 </user_question>
@@ -79,62 +92,136 @@ Do not invent information.
 Provide your answer based on the evidence above.
 """.strip()
 
-    return f"""
-You are an Enterprise Integration Support Copilot.
 
-Answer the user's question using ONLY the supplied context.
+def extract_user_question(prompt: str) -> str:
+    match = re.search(
+        r"<user_question>\s*(.*?)\s*</user_question>",
+        prompt,
+        flags=re.DOTALL,
+    )
 
-Rules:
-1. Do not invent information.
-2. If the context does not contain enough information, say so.
-3. Provide practical troubleshooting steps when available.
-4. Mention relevant historical incidents when available.
-5. Cite sources using [SOURCE 1], [SOURCE 2], etc.
-6. Keep the answer concise and operationally useful.
+    if match:
+        return match.group(1).strip()
 
-USER QUESTION:
-{question}
+    return prompt.strip()
 
-CONTEXT:
-{context}
 
-ANSWER:
-""".strip()
+def prepare_guardrail_content(prompt: str) -> list[dict]:
+    """
+    Separate the actual user question from the RAG context.
+
+    Only the user question is explicitly tagged for
+    guardrail input assessment. The remaining RAG prompt
+    is still supplied to the model as reference context.
+    """
+    match = re.search(
+        r"<user_question>\s*(.*?)\s*</user_question>",
+        prompt,
+        flags=re.DOTALL,
+    )
+
+    if not match:
+        return [
+            {
+                "guardContent": {
+                    "text": {
+                        "text": prompt,
+                        "qualifiers": ["guard_content"],
+                    }
+                }
+            }
+        ]
+
+    question = match.group(1).strip()
+
+    # Preserve the complete RAG prompt while replacing the
+    # original question with a placeholder.
+    reference_prompt = (
+        prompt[:match.start(1)]
+        + "[USER QUESTION PROVIDED SEPARATELY]"
+        + prompt[match.end(1):]
+    )
+
+    return [
+        {
+            "text": reference_prompt
+        },
+        {
+            "guardContent": {
+                "text": {
+                    "text": question,
+                    "qualifiers": ["guard_content"],
+                }
+            }
+        },
+    ]
+
+
 def generate_answer(
     prompt: str,
     client=None,
     model_id: str = DEFAULT_GENERATION_MODEL_ID,
 ) -> str:
-
-    if not prompt.strip():
+    if not isinstance(prompt, str) or not prompt.strip():
         raise ValueError("Prompt cannot be empty.")
 
     if client is None:
         client = create_bedrock_client()
 
-    response = client.converse(
-        modelId=model_id,
-        system=[
-        {
-            "text": SYSTEM_PROMPT
-        }
-    ],
-    messages=[
+    guardrail_id = os.getenv(
+        "BEDROCK_GUARDRAIL_ID", ""
+    ).strip()
+
+    guardrail_version = os.getenv(
+        "BEDROCK_GUARDRAIL_VERSION", "DRAFT"
+    ).strip()
+
+    request = {
+        "modelId": model_id,
+        "system": [
             {
-                "role": "user",
-                "content": [
-                    {
-                        "text": prompt
-                    }
-                ],
+                "text": SYSTEM_PROMPT
             }
         ],
-        inferenceConfig={
+        "messages": [
+            {
+                "role": "user",
+                "content": (
+                    prepare_guardrail_content(prompt)
+                    if guardrail_id
+                    else [{"text": prompt}]
+                ),
+            }
+        ],
+        "inferenceConfig": {
             "maxTokens": 800,
             "temperature": 0.1,
         },
-    )
+    }
 
-    return (
-        response["output"]["message"]["content"][0]["text"]
-    )
+    if guardrail_id:
+        request["guardrailConfig"] = {
+            "guardrailIdentifier": guardrail_id,
+            "guardrailVersion": guardrail_version,
+            "trace": "enabled",
+        }
+
+    response = client.converse(**request)
+
+    if response.get("stopReason") == "guardrail_intervened":
+        return GUARDRAIL_BLOCKED_MESSAGE
+
+    content = response["output"]["message"]["content"]
+
+    answer = "\n".join(
+        block["text"]
+        for block in content
+        if "text" in block
+    ).strip()
+
+    if not answer:
+        raise ValueError(
+            "Bedrock returned an empty text response."
+        )
+
+    return answer
