@@ -4,6 +4,10 @@ from pathlib import Path
 
 from src.app_logging import get_logger
 from src.citation_validator import validate_citations
+from src.contextual_grounding import (
+    validate_grounding,
+    GROUNDING_FAILURE_MESSAGE,
+)
 from src.document_access import filter_authorized_records
 from src.input_guardrails import validate_question
 from src.embeddings import embed_text
@@ -61,12 +65,10 @@ def ask_rag(
         # Step 1: Validate question.
         question = validate_question(question)
 
-        # None retains legacy behavior for existing callers.
-        # An empty list explicitly denies access.
         access_scoped = allowed_systems is not None
 
-        # Step 2: Check cache only for legacy unscoped calls.
-        # Scoped requests must never reuse another user's cache.
+        # Step 2: Check cache.
+        # Scoped requests cannot reuse the shared cache.
         if not access_scoped:
             cached_result = get_cached_result(question)
 
@@ -75,6 +77,7 @@ def ask_rag(
                 and cached_result.get("answer") not in (
                     GUARDRAIL_BLOCKED_MESSAGE,
                     CITATION_FAILURE_MESSAGE,
+                    GROUNDING_FAILURE_MESSAGE,
                 )
             ):
                 logger.info(
@@ -92,7 +95,7 @@ def ask_rag(
             embedding_file
         )
 
-        # Step 4: Filter documents before retrieval.
+        # Step 4: Apply document access filtering.
         if access_scoped:
             records = filter_authorized_records(
                 records,
@@ -119,18 +122,17 @@ def ask_rag(
                 }
 
         # Step 5: Generate question embedding.
-        query_embedding = embed_text(
-            question
-        )
+        query_embedding = embed_text(question)
 
-        # Step 6: Retrieve relevant documents.
+        # Step 6: Retrieve matching documents.
         results = retrieve_top_k(
             query_embedding,
             records,
             top_k=top_k,
+            query_text=question,
         )
 
-        # Step 7: Validate retrieval confidence.
+        # Step 7: Check retrieval confidence.
         if not has_sufficient_evidence(results):
             logger.info(
                 "rag_complete status=insufficient_evidence "
@@ -146,7 +148,7 @@ def ask_rag(
                 "cache_hit": False,
             }
 
-        # Step 8: Build RAG context.
+        # Step 8: Build retrieved context.
         context = build_context(results)
 
         # Step 9: Build prompt.
@@ -158,7 +160,7 @@ def ask_rag(
         # Step 10: Generate answer using Bedrock Guardrails.
         answer = generate_answer(prompt)
 
-        # Step 11: Check security and citations.
+        # Step 11: Verify security, citations and grounding.
         if answer == GUARDRAIL_BLOCKED_MESSAGE:
             status = "guardrail_blocked"
 
@@ -168,6 +170,14 @@ def ask_rag(
         ):
             answer = CITATION_FAILURE_MESSAGE
             status = "citation_failed"
+
+        elif not validate_grounding(
+            question=question,
+            context=context,
+            answer=answer,
+        ):
+            answer = GROUNDING_FAILURE_MESSAGE
+            status = "grounding_failed"
 
         else:
             status = "success"
@@ -197,7 +207,7 @@ def ask_rag(
                 result,
             )
 
-        # Step 15: Log execution status.
+        # Step 15: Log result without sensitive content.
         logger.info(
             "rag_complete status=%s "
             "source_count=%d elapsed_ms=%.0f",
@@ -209,7 +219,6 @@ def ask_rag(
         return result
 
     except Exception:
-        # Avoid logging sensitive questions or document text.
         logger.error(
             "rag_failed stage=pipeline elapsed_ms=%.0f",
             (time.perf_counter() - start) * 1000,

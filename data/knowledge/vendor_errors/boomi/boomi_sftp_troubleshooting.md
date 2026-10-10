@@ -129,14 +129,14 @@ Never disable host key verification simply to bypass a mismatch.
 ## Step 7 — Test SFTP Login (Authorized Linux/Windows Client)
 Where an approved SSH client is available, run:
 
-sftp -P 22 username@sftp.example.com
+sftp -P 22 sftpuser@192.0.2.10
 
 Verify the server host key against an independently trusted
 fingerprint before accepting a first-time connection.
 
 For an approved private key:
 
-sftp -i /path/to/private_key -P 22 username@sftp.example.com
+sftp -i /path/to/private_key -P 22 sftpuser@192.0.2.10
 
 Expected Result:
 An interactive sftp> prompt after successful authentication.
@@ -211,3 +211,4 @@ https://help.boomi.com/docs/Atomsphere/Integration/Connectors/SFTP_connector
 - Do not expose credentials, private keys, or sensitive file contents.
 - Request missing environment details when exact instructions depend on them.
 - Cite the source document used.
+
