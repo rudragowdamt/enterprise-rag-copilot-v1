@@ -106,9 +106,11 @@ with st.sidebar:
 
     st.divider()
 
-    st.write("📄 24 documents")
-    st.write("🧩 76 chunks")
-    st.write("🎯 Recall@5: 90.28%")
+    st.write("📄 28 documents")
+    st.write("🧩 106 chunks")
+    st.write("🛡️ AWS Bedrock Guardrails")
+    st.write("✅ Contextual Grounding")
+    st.write("🔐 Retrieval Confidence & Citation Validation")
 
     st.divider()
 
