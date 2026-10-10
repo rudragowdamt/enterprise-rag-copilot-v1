@@ -1,49 +1,171 @@
-import time
+
+import json
+from pathlib import Path
+from urllib.parse import quote
+
 import streamlit as st
 
-from src.rag_pipeline import ask_rag
+
+# =========================================================
+# CONFIGURATION — NO AWS OR BEDROCK IMPORTS
+# =========================================================
+
+BASE_DIR = Path(__file__).resolve().parent
+
+CACHE_FILE = (
+    BASE_DIR / "data" / "demo_cache" / "demo_answers.json"
+)
+
+KNOWLEDGE_DIR = BASE_DIR / "data" / "knowledge"
+
+GITHUB_REPOSITORY = (
+    "rudragowdamt/enterprise-rag-copilot-v1"
+)
+
+GITHUB_BRANCH = "v2-demo-cache-only"
 
 
 # =========================================================
-# CONFIGURATION
-# =========================================================
-
-MAX_REQUESTS = 10
-REQUEST_COOLDOWN_SECONDS = 5
-MAX_QUESTION_LENGTH = 500
-
-
-# =========================================================
-# PAGE
+# PAGE CONFIGURATION
 # =========================================================
 
 st.set_page_config(
-    page_title="Enterprise Integration AI Copilot",
+    page_title="Enterprise Integration RAG Copilot",
     page_icon="🤖",
     layout="wide",
 )
 
 
 # =========================================================
-# SESSION STATE
+# LOAD PRE-GENERATED RAG RESULTS
 # =========================================================
 
-if "request_count" not in st.session_state:
-    st.session_state.request_count = 0
+@st.cache_data
+def load_demo_data():
+    """
+    Read a local JSON file only.
 
-if "last_request_time" not in st.session_state:
-    st.session_state.last_request_time = 0.0
+    This function never connects to AWS.
+    """
+
+    if not CACHE_FILE.is_file():
+        return []
+
+    try:
+        with CACHE_FILE.open(
+            "r",
+            encoding="utf-8",
+        ) as file:
+            payload = json.load(file)
+
+        if payload.get("demo_mode") != "cache_only":
+            return []
+
+        questions = payload.get("questions", [])
+
+        if not isinstance(questions, list):
+            return []
+
+        return [
+            item
+            for item in questions
+            if isinstance(item, dict)
+            and item.get("question")
+            and item.get("answer")
+        ]
+
+    except (OSError, ValueError, TypeError):
+        return []
 
 
 # =========================================================
-# PURPLE BRANDING
+# SAFE DOCUMENT LINKS
+# =========================================================
+
+def find_original_document(source):
+    """
+    Locate a document inside data/knowledge.
+
+    Only known local Markdown files are eligible.
+    The file must have a unique matching path or name.
+    """
+
+    if not KNOWLEDGE_DIR.is_dir():
+        return None
+
+    raw_path = str(
+        source.get("source") or ""
+    ).replace("\\", "/").strip()
+
+    if not raw_path:
+        return None
+
+    knowledge_root = KNOWLEDGE_DIR.resolve()
+
+    # First try a repository-relative source path.
+    candidate = (BASE_DIR / raw_path).resolve()
+
+    if (
+        candidate.is_file()
+        and candidate.suffix.lower() == ".md"
+        and candidate.is_relative_to(knowledge_root)
+    ):
+        return candidate
+
+    # Some cached sources store only a filename.
+    # Match only when that filename is unique.
+    filename = raw_path.split("/")[-1]
+
+    if not filename.lower().endswith(".md"):
+        return None
+
+    matches = [
+        path.resolve()
+        for path in KNOWLEDGE_DIR.rglob("*.md")
+        if path.name.lower() == filename.lower()
+    ]
+
+    if len(matches) == 1:
+        return matches[0]
+
+    return None
+
+
+def get_github_document_url(source):
+    """
+    Create a GitHub URL only for a verified local file.
+    """
+
+    document_path = find_original_document(source)
+
+    if document_path is None:
+        return None
+
+    relative_path = document_path.relative_to(
+        BASE_DIR.resolve()
+    )
+
+    encoded_path = quote(
+        relative_path.as_posix(),
+        safe="/",
+    )
+
+    return (
+        f"https://github.com/"
+        f"{GITHUB_REPOSITORY}/blob/"
+        f"{GITHUB_BRANCH}/{encoded_path}"
+    )
+
+
+# =========================================================
+# STYLING
 # =========================================================
 
 st.markdown(
     """
     <style>
     .main-title {
-        font-size: 42px;
+        font-size: 40px;
         font-weight: 700;
         color: #6C3FC5;
     }
@@ -59,27 +181,30 @@ st.markdown(
 )
 
 
+# =========================================================
+# HEADER
+# =========================================================
+
 st.markdown(
     '<div class="main-title">'
-    '🤖 Enterprise Integration AI Copilot'
+    '🤖 Enterprise Integration RAG Copilot'
     '</div>',
     unsafe_allow_html=True,
 )
 
 st.markdown(
     '<div class="subtitle">'
-    'RAG-powered assistant for enterprise integration '
-    'support and incident resolution'
+    'Enterprise incident investigation, troubleshooting '
+    'and knowledge retrieval'
     '</div>',
     unsafe_allow_html=True,
 )
 
-
 st.info(
-    "Ask an enterprise integration support question. "
-    "The Copilot retrieves relevant information from "
-    "synthetic runbooks, architecture documents and "
-    "historical incidents before generating a grounded answer."
+    "Explore previously generated RAG investigations "
+    "using synthetic enterprise integration knowledge. "
+    "Each answer was generated during preparation and "
+    "saved with its retrieved source evidence."
 )
 
 
@@ -89,26 +214,29 @@ st.info(
 
 with st.sidebar:
 
-    st.header("AI Copilot")
-
-    st.write(
-        "Enterprise Integration Knowledge & "
-        "Incident Resolution"
-    )
-
-    st.divider()
+    st.header("RAG Copilot V2")
 
     st.write("🧠 Amazon Bedrock")
     st.write("🔢 Titan Text Embeddings V2")
     st.write("💬 Claude Haiku 4.5")
-    st.write("🔎 Semantic Retrieval")
+    st.write("🔎 Knowledge Retrieval")
     st.write("🎨 Streamlit")
 
     st.divider()
 
-    st.write("📄 24 documents")
-    st.write("🧩 76 chunks")
-    st.write("🎯 Recall@5: 90.28%")
+    st.subheader("Demonstration Mode")
+
+    st.success("Cache-only mode")
+
+    st.write(
+        "No live AI inference or AWS requests "
+        "are performed by this application."
+    )
+
+    st.divider()
+
+    st.write("📄 24 knowledge documents")
+    st.write("🎯 Pre-generated RAG responses")
 
     st.divider()
 
@@ -118,269 +246,278 @@ with st.sidebar:
 
 
 # =========================================================
-# QUESTION
+# LOAD QUESTION BANK
 # =========================================================
 
-st.subheader("Ask the Copilot")
+questions = load_demo_data()
+
+if not questions:
+
+    st.error(
+        "The demonstration question bank is unavailable. "
+        "Check data/demo_cache/demo_answers.json."
+    )
+
+    st.stop()
 
 
-example_questions = {
-    "Axway 504 Gateway Timeout": (
-        "PaymentService through Axway is returning HTTP 504. "
-        "What should I investigate and have we seen this before?"
-    ),
-    "Boomi Deployment Failure": (
-        "A Boomi production process started failing immediately "
-        "after deployment. What should support check?"
-    ),
-    "Layer7 Authentication Issue": (
-        "Layer7 suddenly returns 401 for many clients after "
-        "an IdP change. What is a likely cause?"
-    ),
-    "SFTP Host Key Change": (
-        "Our partner SFTP host key changed. Can we bypass "
-        "validation to restore service?"
-    ),
-}
+# =========================================================
+# QUESTION DROPDOWN
+# =========================================================
 
+st.subheader("🔍 Investigate an Integration Issue")
 
-selected_example = st.selectbox(
-    "Try an example",
-    list(example_questions.keys()),
+st.write(
+    "Choose an investigation scenario to explore "
+    "how RAG uses enterprise knowledge."
 )
 
-
-default_question = example_questions[
-    selected_example
+question_labels = [
+    item.get(
+        "label",
+        item["question"],
+    )
+    for item in questions
 ]
 
-
-question = st.text_area(
-    "Describe the integration issue",
-    value=default_question,
-    height=120,
-    max_chars=MAX_QUESTION_LENGTH,
+selected_index = st.selectbox(
+    "Select an investigation scenario",
+    options=range(len(questions)),
+    format_func=lambda index: question_labels[index],
 )
 
+selected_item = questions[selected_index]
 
-# =========================================================
-# REQUEST STATUS
-# =========================================================
+question = selected_item["question"]
+answer = str(selected_item["answer"])
 
-remaining_requests = max(
-    MAX_REQUESTS - st.session_state.request_count,
-    0,
+sources = selected_item.get(
+    "sources",
+    [],
+)
+
+if not isinstance(sources, list):
+    sources = []
+
+
+st.text_area(
+    "Investigation question",
+    value=question,
+    height=105,
+    disabled=True,
 )
 
 st.caption(
-    f"Demo requests remaining: "
-    f"{remaining_requests}/{MAX_REQUESTS}"
+    f"{len(questions)} predefined investigation questions "
+    "available."
 )
 
 
 # =========================================================
-# RAG
+# SHOW CACHED ANSWER
 # =========================================================
 
 if st.button(
-    "🔍 Investigate Issue",
+    "🔍 View Investigation",
     type="primary",
     use_container_width=True,
 ):
 
-    # -----------------------------------------------------
-    # VALIDATION
-    # -----------------------------------------------------
+    st.session_state["show_demo_answer"] = True
+    st.session_state["selected_demo_index"] = selected_index
 
-    if not question.strip():
+
+# Do not display an old answer after changing the question.
+show_answer = (
+    st.session_state.get("show_demo_answer", False)
+    and st.session_state.get(
+        "selected_demo_index"
+    ) == selected_index
+)
+
+
+if show_answer:
+
+    st.divider()
+
+    st.success(
+        "Previously generated RAG investigation retrieved "
+        "from the local demonstration cache."
+    )
+
+    # =====================================================
+    # COPILOT RESPONSE
+    # =====================================================
+
+    st.header("🤖 Copilot Investigation")
+
+    st.markdown(answer)
+
+    st.caption(
+        "This response was generated previously using "
+        "the RAG pipeline. No AI model was called "
+        "to display this answer."
+    )
+
+
+    # =====================================================
+    # EVIDENCE
+    # =====================================================
+
+    st.divider()
+
+    st.subheader("📚 Supporting Evidence")
+
+    st.write(
+        "Review the knowledge passages retrieved "
+        "during the original RAG execution."
+    )
+
+    st.caption(
+        "Source numbers correspond to citations "
+        "in the saved answer."
+    )
+
+    if not sources:
 
         st.warning(
-            "Please enter an integration support question."
-        )
-
-    elif st.session_state.request_count >= MAX_REQUESTS:
-
-        st.error(
-            "Demo request limit reached for this session."
-        )
-
-    elif (
-        time.time()
-        - st.session_state.last_request_time
-        < REQUEST_COOLDOWN_SECONDS
-    ):
-
-        st.warning(
-            "Please wait a few seconds before "
-            "submitting another request."
+            "No supporting sources were stored "
+            "for this response."
         )
 
     else:
 
-        # -------------------------------------------------
-        # VALID REQUEST
-        # -------------------------------------------------
+        st.write(
+            f"**{len(sources)} retrieved knowledge chunks**"
+        )
 
-        st.session_state.request_count += 1
-        st.session_state.last_request_time = time.time()
+        for index, source in enumerate(
+            sources,
+            start=1,
+        ):
 
-        try:
-
-            with st.spinner(
-                "Searching enterprise knowledge and "
-                "generating a grounded response..."
-            ):
-
-                result = ask_rag(
-                    question.strip()
-                )
-
-
-            # =============================================
-            # SUCCESS
-            # =============================================
-
-            st.success(
-                "Analysis completed successfully."
-            )
-
-
-            # =============================================
-            # CACHE
-            # =============================================
-
-            if result.get(
-                "cache_hit",
-                False,
-            ):
-
-                st.caption(
-                    "⚡ Response served from cache."
-                )
-
-            else:
-
-                st.caption(
-                    "🧠 Fresh RAG analysis using Amazon Bedrock."
-                )
-
-
-            # =============================================
-            # ANSWER
-            # =============================================
-
-            st.subheader(
-                "🤖 Copilot Response"
-            )
-
-            st.markdown(
-                result.get(
-                    "answer",
-                    "No answer returned.",
-                )
-            )
-
-
-            # =============================================
-            # EVIDENCE
-            # =============================================
-
-            st.subheader(
-                "📚 Retrieved Evidence"
-            )
-
-            st.caption(
-                "These knowledge chunks were retrieved "
-                "before generating the response."
-            )
-
-
-            sources = result.get(
-                "sources",
-                [],
-            )
-
-
-            if not sources:
-
-                st.info(
-                    "No retrieval evidence was returned."
-                )
-
-
-            for index, source in enumerate(
-                sources,
-                start=1,
-            ):
-
-                score = float(
-                    source.get(
-                        "similarity_score",
-                        0.0,
-                    )
-                )
-
-                title = source.get(
+            title = str(
+                source.get(
                     "title",
                     "Enterprise Document",
                 )
+            )
 
-                section = source.get(
+            section = str(
+                source.get(
                     "section",
-                    "N/A",
+                    "Unknown Section",
+                )
+            )
+
+            with st.expander(
+                f"[SOURCE {index}] "
+                f"{title} — {section}"
+            ):
+
+                st.markdown(
+                    f"**Document:** {title}"
                 )
 
+                st.markdown(
+                    f"**Section:** {section}"
+                )
 
-                with st.expander(
-                    f"Source {index} — "
-                    f"{title} | "
-                    f"Score {score:.4f}"
-                ):
+                st.write(
+                    "**Document ID:**",
+                    source.get(
+                        "document_id",
+                        "N/A",
+                    ),
+                )
 
-                    st.write(
-                        "**Document ID:**",
-                        source.get(
-                            "document_id",
-                            "N/A",
-                        ),
+                content = source.get(
+                    "content",
+                    "",
+                )
+
+                if content:
+
+                    st.markdown(
+                        "**Retrieved source passage:**"
                     )
 
-                    st.write(
-                        "**Chunk ID:**",
-                        source.get(
-                            "chunk_id",
-                            "N/A",
-                        ),
+                    st.text(str(content))
+
+                else:
+
+                    st.caption(
+                        "The original passage was not "
+                        "included in the saved response."
                     )
 
-                    st.write(
-                        "**Section:**",
-                        section,
+                score = source.get(
+                    "similarity_score",
+                )
+
+                if score is not None:
+
+                    try:
+                        st.caption(
+                            "Semantic similarity: "
+                            f"{float(score):.4f}"
+                        )
+                    except (TypeError, ValueError):
+                        pass
+
+                github_url = get_github_document_url(
+                    source
+                )
+
+                if github_url:
+
+                    st.link_button(
+                        "🔗 View original document on GitHub",
+                        github_url,
                     )
 
-                    st.write(
-                        "**Source:**",
-                        source.get(
-                            "source",
-                            "N/A",
-                        ),
-                    )
+                else:
 
-                    st.write(
-                        "**Similarity Score:**",
-                        f"{score:.4f}",
+                    st.caption(
+                        "Original document link unavailable; "
+                        "review the saved source passage above."
                     )
 
 
-        except Exception as error:
+    # =====================================================
+    # RAG CONCEPT
+    # =====================================================
 
-            st.error(
-                "The Copilot could not process the request."
-            )
+    st.divider()
 
-            st.exception(
-                error
-            )
+    st.subheader("🧠 How RAG Produced This Answer")
+
+    st.markdown(
+        """
+        **1. Knowledge base:** Enterprise integration
+        documents and historical incident runbooks.
+
+        **2. Retrieval:** Vector embeddings were used
+        to find relevant document passages.
+
+        **3. Generation:** Amazon Bedrock and Claude
+        generated an answer using the retrieved context.
+
+        **4. Evidence:** Retrieved passages were saved
+        alongside the answer for cross-checking.
+
+        **5. Demonstration:** The previously generated
+        answer is displayed directly from local JSON,
+        without any live AWS calls.
+        """
+    )
+
+    st.warning(
+        "This is a pre-generated demonstration, "
+        "not a live AI chatbot. The presence of citations "
+        "does not independently guarantee every claim "
+        "is correct."
+    )
 
 
 # =========================================================
@@ -389,17 +526,12 @@ if st.button(
 
 st.divider()
 
-remaining_requests = max(
-    MAX_REQUESTS - st.session_state.request_count,
-    0,
-)
-
-st.caption(
-    f"Demo requests remaining: "
-    f"{remaining_requests}/{MAX_REQUESTS}"
-)
-
 st.caption(
     "Enterprise Integration Knowledge & Incident Resolution "
-    "RAG Copilot | Portfolio Project | Synthetic Data"
+    "RAG Copilot | V2 Cached Demonstration"
+)
+
+st.caption(
+    "Synthetic data | Pre-generated answers | "
+    "No live AWS inference"
 )
