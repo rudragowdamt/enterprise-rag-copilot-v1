@@ -160,6 +160,7 @@ def ask_rag(
         # Step 10: Generate answer using Bedrock Guardrails.
         answer = generate_answer(prompt)
 
+
         # Step 11: Verify security, citations and grounding.
         if answer == GUARDRAIL_BLOCKED_MESSAGE:
             status = "guardrail_blocked"
